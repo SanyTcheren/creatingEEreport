@@ -1,33 +1,22 @@
-import express, { Request, Response } from 'express';
-import path from 'path';
+import { Container, ContainerModule, interfaces } from 'inversify';
+import { App } from './App';
+import { TYPES } from './types';
 
-const port = 8000;
-const app = express();
+interface IBootstrapReturn {
+	appContainer: Container;
+	app: App;
+}
 
-// КОНФИГУРАЦИЯ ПРИЛОЖЕНИЯ
-// ==================================================
-// сообщаем Node где лежат ресурсы сайта
-app.use(express.static(path.join(__dirname, '../public')));
-
-// устанавливаем движок EJS для представления
-app.set('view engine', 'ejs');
-
-app.get('/login', function (req, res) {
-	res.render('pages/login');
+const appBinding = new ContainerModule((bind: interfaces.Bind) => {
+	bind<App>(TYPES.Application).to(App);
 });
 
-app.get('/register', function (req, res) {
-	res.render('pages/register');
-});
+async function bootstrap(): Promise<IBootstrapReturn> {
+	const appContainer = new Container();
+	appContainer.load(appBinding);
+	const app = appContainer.get<App>(TYPES.Application);
+	await app.init();
+	return { appContainer, app };
+}
 
-app.get('/input', function (req, res) {
-	res.render('pages/input');
-});
-
-app.post('/report', function (req, res) {
-	res.render('pages/report');
-});
-
-app.listen(port, () => {
-	console.log(`Server started on http://localhost:${port}/login`);
-});
+export const boot = bootstrap();
