@@ -2,14 +2,16 @@ import 'reflect-metadata';
 import express, { Request, Response, Express } from 'express';
 import { Server } from 'http';
 import path from 'path';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './types';
+import { ILogger } from './logger/logger.interface';
 
 @injectable()
 export class App {
 	app: Express;
 	server: Server | undefined;
 
-	constructor() {
+	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
 		this.app = express();
 	}
 
@@ -49,7 +51,7 @@ export class App {
 		this.useRotes();
 		this.useExceptionFilter();
 		this.server = this.app.listen('8000');
-		console.log(`Сервер запущен на http://localhost:8000/login`);
+		this.logger.log(`[application] Сервер запущен на http://localhost:8000/login`);
 	}
 
 	public close(): void {

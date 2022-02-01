@@ -1,5 +1,7 @@
 import { Container, ContainerModule, interfaces } from 'inversify';
 import { App } from './App';
+import { ILogger } from './logger/logger.interface';
+import { LoggerService } from './logger/logger.service';
 import { TYPES } from './types';
 
 interface IBootstrapReturn {
@@ -8,7 +10,8 @@ interface IBootstrapReturn {
 }
 
 const appBinding = new ContainerModule((bind: interfaces.Bind) => {
-	bind<App>(TYPES.Application).to(App);
+	bind<App>(TYPES.Application).to(App).inSingletonScope();
+	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {
