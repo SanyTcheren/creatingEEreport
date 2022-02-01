@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<%- include ('../partials/head') %>
+</head>
+
+<body>
+
+	<header>
+		<!-- <%- include ('../partials/header') %> -->
+	</header>
+
+	<main>
+
+		<div class="container">
+			<section id="content">
+				<form action="/input">
+					<h1>Login</h1>
+					<div>
+						<input type="text" placeholder="Email" required="" id="useremail" />
+					</div>
+					<div>
+						<input type="password" placeholder="Password" required="" id="password" />
+					</div>
+					<div>
+						<input type="submit" value="Log in" />
+						<a href="#">Lost your password?</a>
+						<a href="/register">Register</a>
+					</div>
+				</form>
+
+			</section>
+		</div>
+
+	</main>
+
+	<footer>
+		<%- include ('../partials/footer') %>
+	</footer>
+</body>
+
+</html>

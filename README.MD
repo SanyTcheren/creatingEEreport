@@ -40,6 +40,7 @@
 - Сервер пишем на express
 - Для бд используем sqlite и Prisma
 - тесты реализуем на jest и supertest
+- для фронтенда используем `ejs`
 
 ---
 ## Хронология
@@ -61,6 +62,16 @@
 
 *2022-02-01*
 
+*Создание и опробование простого фронтенда*
+1. В качестве "рыбы" использовал этот [сайт](https://www.npmjs.com/package/ejs)
+2. Будем использовать [ejs](https://www.npmjs.com/package/ejs)
+3. Статические ресурсы подключены к папке `/public`
+4. Создана стандартная папка `views` для размещения файлов `ejs`
+5. Набросана приблизительная структура сайта `Login -> [Register] -> Input -> Report`
+6. Созданы всплывающие сообщения [пример](https://html5css.ru/howto/howto_js_alert.php)
+7. Настроено копирование папки public  - `"build": "tsc | cp -r ./public ./dist/public",` 
+
+
 
 
 ---
@@ -78,6 +89,7 @@
 - `jest` - для юнит тестов
 - `supertest` - для е2е тестов
 - `prisma` - для работы с базой данных
+- `ejs` - для фронтенда
 
 ## Установленные пакеты
 ```
@@ -91,6 +103,7 @@ npm i -D jest ts-jest @types/jest
 npm i -D supertest @types/supertest
 npm i -D prisma
 npm i @prisma/client  //Клиент призмы
+npm i ejs @types/ejs
 
 ```
 

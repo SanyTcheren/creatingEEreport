@@ -1,8 +1,10 @@
 {
 	"watch": [
-		"src"
+		"src",
+		"views",
+		"public"
 	],
-	"ext": "ts,json",
+	"ext": "ts,json,ejs,css",
 	"ignore": [
 		"src/**/*.spec.ts",
 		"tests/**"

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<%- include ('../partials/head') %>
+</head>
+
+<body>
+
+	<header>
+		<!-- <%- include ('../partials/header') %> -->
+	</header>
+
+	<main>
+
+		<div class="container">
+			<section id="content">
+				<form action="/report" method="post">
+					<h1>Input</h1>
+					<div>
+						<input name="myFile" type="file" value="профиль мощности" required="" id="useremail">
+					</div>
+
+					<div>
+						<input type="submit" value="Create" />
+						<a href="/login">Login</a>
+					</div>
+				</form>
+
+			</section>
+		</div>
+
+	</main>
+
+	<footer>
+		<%- include ('../partials/footer') %>
+	</footer>
+</body>
+
+</html>
