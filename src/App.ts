@@ -5,13 +5,18 @@ import path from 'path';
 import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
 import { ILogger } from './logger/logger.interface';
+import { IExceptionFilter } from './error/exception.fiter.interface';
+import { HttpError } from './error/http.error';
 
 @injectable()
 export class App {
 	app: Express;
 	server: Server | undefined;
 
-	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private logger: ILogger,
+		@inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter,
+	) {
 		this.app = express();
 	}
 
@@ -29,8 +34,9 @@ export class App {
 			res.render('pages/login');
 		});
 
-		this.app.get('/register', function (req, res) {
-			res.render('pages/register');
+		this.app.get('/register', function (req, res, next) {
+			next(new HttpError(403, 'тестовая ошибка', 'register'));
+			// res.render('pages/register');
 		});
 
 		this.app.get('/input', function (req, res) {
@@ -43,7 +49,7 @@ export class App {
 	}
 
 	useExceptionFilter(): void {
-		return;
+		this.app.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
 	}
 
 	public async init(): Promise<void> {
