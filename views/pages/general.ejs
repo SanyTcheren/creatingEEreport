@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<%- include ('../partials/head') %>
+</head>
+
+<body>
+
+	<header>
+		<!-- <%- include ('../partials/header') %> -->
+	</header>
+
+	<main>
+
+		<div class="container">
+			<section id="content">
+				<form action="/oilwell" method="post">
+					<h1>General</h1>
+					<div>
+						<input type="text" placeholder="тип буровой установки" id="" />
+					</div>
+					<div>
+						<input type="text" placeholder="номер бу" id="" />
+					</div>
+					<div>
+						<input type="text" placeholder="месторождение" id="" />
+					</div>
+					<div>
+						<input type="text" placeholder="куст" id="" />
+					</div>
+					<div>
+						<input type="submit" value="Oil Well" />
+						<a href="/login">Login</a>
+					</div>
+				</form>
+
+			</section>
+		</div>
+
+	</main>
+
+	<footer>
+		<%- include ('../partials/footer') %>
+	</footer>
+</body>
+
+</html>

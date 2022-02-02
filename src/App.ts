@@ -1,14 +1,15 @@
 import 'reflect-metadata';
-import express, { Request, Response, Express } from 'express';
+import express, { Express } from 'express';
 import { Server } from 'http';
 import path from 'path';
 import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
 import { ILogger } from './logger/logger.interface';
 import { IExceptionFilter } from './error/exception.fiter.interface';
-import { HttpError } from './error/http.error';
 import { IConfigService } from './config/config.service.interface';
 import { IUserController } from './user/user.controller.interface';
+import { urlencoded } from 'body-parser';
+import fileUpload from 'express-fileupload';
 
 @injectable()
 export class App {
@@ -27,7 +28,8 @@ export class App {
 	}
 
 	useMiddleware(): void {
-		return;
+		this.app.use(urlencoded({ extended: false }));
+		this.app.use(fileUpload());
 	}
 
 	useRotes(): void {

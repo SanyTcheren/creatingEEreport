@@ -15,18 +15,16 @@
 
 		<div class="container">
 			<section id="content">
-				<form action="/report" method="post">
+				<form action="/report" method='post' encType="multipart/form-data"">
 					<h1>Input</h1>
+						<input value=" профиль мощности" type="file" name="sampleFile" id="userfile">
 					<div>
-						<input name="myFile" type="file" value="профиль мощности" required="" id="useremail">
-					</div>
-
-					<div>
-						<input type="submit" value="Create" />
-						<a href="/login">Login</a>
+						<input type="submit" value="Upload" />
+						<a href="/login">login</a>
+						<a href="/general">general</a>
+						<a href="/oilwell">oilwell</a>
 					</div>
 				</form>
-
 			</section>
 		</div>
 

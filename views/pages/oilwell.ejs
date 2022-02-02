@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<%- include ('../partials/head') %>
+</head>
+
+<body>
+
+	<header>
+		<!-- <%- include ('../partials/header') %> -->
+	</header>
+
+	<main>
+
+		<div class="container">
+			<section id="content">
+				<form action="">
+					<h1>Oil well</h1>
+					<div>
+						<input type="text" placeholder="скважина" id="" />
+						<select required size="1" name="name[]"" class=" select-css">
+							<option value="Да">пзр</option>
+							<option value="Нет">бурение</option>
+						</select>
+					</div>
+					<div>
+						<input type="datetime-local" атрибуты />
+						<input type="datetime-local" атрибуты />
+					</div>
+					<div>
+						<input type="submit" value="Add" />
+						<a href="/login">login</a>
+						<a href="/general">general</a>
+					</div>
+				</form>
+				<div>
+					<form action="/input">
+						<button type="submit" id="saveButton">Report</button>
+					</form>
+				</div>
+			</section>
+		</div>
+
+	</main>
+
+	<footer>
+		<%- include ('../partials/footer') %>
+	</footer>
+</body>
+
+</html>
