@@ -7,6 +7,8 @@ import { IExceptionFilter } from './error/exception.fiter.interface';
 import { ILogger } from './logger/logger.interface';
 import { LoggerService } from './logger/logger.service';
 import { TYPES } from './types';
+import { UserController } from './user/user.controller';
+import { IUserController } from './user/user.controller.interface';
 
 interface IBootstrapReturn {
 	appContainer: Container;
@@ -18,6 +20,7 @@ const appBinding = new ContainerModule((bind: interfaces.Bind) => {
 	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
 	bind<IExceptionFilter>(TYPES.IExceptionFilter).to(ExceptionFilter).inSingletonScope();
 	bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope();
+	bind<IUserController>(TYPES.IUserController).to(UserController);
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {
