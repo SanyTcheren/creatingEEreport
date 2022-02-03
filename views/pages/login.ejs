@@ -7,15 +7,12 @@
 
 <body>
 
-	<header>
-		<!-- <%- include ('../partials/header') %> -->
-	</header>
-
 	<main>
 
 		<div class="container">
 			<section id="content">
 				<form action="/general" method="post" onsubmit="">
+					<a name="start"></a>
 					<h1>Login</h1>
 					<div>
 						<input type="text" placeholder="Email" name="email" id="useremail" />
@@ -25,12 +22,15 @@
 					</div>
 					<div>
 						<input type="submit" value="Log in" />
-						<a href="#">Lost your password?</a>
-						<a href="/register">register</a>
+						<a href="/register" class="button button-primary button-large>register">Register</a>
+						<div>
+							<a href=" #">Lost your password?</a>
+						</div>
 					</div>
 				</form>
 
 			</section>
+			<%- include ('../partials/message') %>
 		</div>
 
 	</main>
@@ -38,6 +38,19 @@
 	<footer>
 		<%- include ('../partials/footer') %>
 	</footer>
+
+	<!-- <script>
+		$(document).ready(function () {
+
+			$('.scroll-down, .get-started').on('click', function (e) {
+				e.preventDefault()
+				$('html, body').animate({
+					scrollTop: $('section:first-of-type').offset().top
+				}, 300)
+			})
+
+		})
+	</script> -->
 </body>
 
 </html>

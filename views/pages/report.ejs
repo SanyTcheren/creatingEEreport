@@ -7,9 +7,9 @@
 
 <body>
 
-	<header>
-		<!-- <%- include ('../partials/header') %> -->
-	</header>
+	<!-- <header> -->
+	<!-- <%- include ('../partials/header') %> -->
+	<!-- </header> -->
 
 	<main>
 
@@ -19,14 +19,16 @@
 					<h1>Report</h1>
 					<div>
 						<input type="submit" value="Save" />
-						<a href="/login">login</a>
-						<a href="/general">general</a>
-						<a href="/oilwell">oilwell</a>
-						<a href="/input">input</a>
+						<div>
+							<a href="/login">login</a>
+							<a href="/general">general</a>
+							<a href="/oilwell">oilwell</a>
+							<a href="/input">input</a>
+						</div>
 					</div>
 				</form>
-
 			</section>
+			<%- include ('../partials/message') %>
 		</div>
 
 	</main>

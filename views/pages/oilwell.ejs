@@ -7,9 +7,9 @@
 
 <body>
 
-	<header>
-		<!-- <%- include ('../partials/header') %> -->
-	</header>
+	<!-- <header> -->
+	<!-- <%- include ('../partials/header') %> -->
+	<!-- </header> -->
 
 	<main>
 
@@ -30,16 +30,17 @@
 					</div>
 					<div>
 						<input type="submit" value="Add" />
-						<a href="/login">login</a>
-						<a href="/general">general</a>
 					</div>
 				</form>
+				<form action="/input">
+					<button type="submit" id="saveButton">Report</button>
+				</form>
 				<div>
-					<form action="/input">
-						<button type="submit" id="saveButton">Report</button>
-					</form>
+					<a href="/login">login</a>
+					<a href="/general">general</a>
 				</div>
 			</section>
+			<%- include ('../partials/message') %>
 		</div>
 
 	</main>

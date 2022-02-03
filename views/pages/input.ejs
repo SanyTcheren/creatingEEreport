@@ -7,26 +7,27 @@
 
 <body>
 
-	<header>
-		<!-- <%- include ('../partials/header') %> -->
-	</header>
-
 	<main>
 
 		<div class="container">
 			<section id="content">
 				<form action="/report" method='post' encType="multipart/form-data"">
 					<h1>Input</h1>
-						<input value=" профиль мощности" type="file" name="sampleFile" id="userfile">
-					<div>
-						<input type="submit" value="Upload" />
-						<a href="/login">login</a>
-						<a href="/general">general</a>
-						<a href="/oilwell">oilwell</a>
-					</div>
-				</form>
-			</section>
+					<div class=" form-control">
+					<input id=" userfile" type="file" name="sampleFile" class="file">
 		</div>
+		<div>
+			<input type="submit" value="Upload" />
+			<div>
+				<a href="/login">login</a>
+				<a href="/general">general</a>
+				<a href="/oilwell">oilwell</a>
+			</div>
+		</div>
+		</form>
+		</section>
+		<%- include ('../partials/message') %>
+			</div>
 
 	</main>
 

@@ -17,7 +17,7 @@ export class UserController extends BaseController implements IUserController {
 			{
 				path: '/',
 				method: 'get',
-				func: this.login,
+				func: this.start,
 				middlewares: [],
 			},
 			{
@@ -100,18 +100,22 @@ export class UserController extends BaseController implements IUserController {
 			},
 		]);
 	}
+	start(req: Request, res: Response, next: NextFunction): void {
+		res.render('pages/start');
+		// this.ok(res, 'sany');
+	}
 	login(req: Request, res: Response, next: NextFunction): void {
-		res.render('pages/login');
+		res.render('pages/login', { message: 'you register success!!!' });
 		// this.ok(res, 'sany');
 	}
 	register(req: Request, res: Response, next: NextFunction): void {
-		res.render('pages/register');
+		res.render('pages/register', { message: 'you register success!!!' });
 	}
 	info(req: Request, res: Response, next: NextFunction): void {
 		return;
 	}
 	general(req: Request, res: Response, next: NextFunction): void {
-		res.render('pages/general');
+		res.render('pages/general', { message: 'you register success!!!' });
 	}
 	async input(
 		{ body }: Request<{}, {}, UserLoginDto>,
@@ -119,10 +123,10 @@ export class UserController extends BaseController implements IUserController {
 		next: NextFunction,
 	): Promise<void> {
 		console.log(body.email);
-		res.render('pages/input');
+		res.render('pages/input', { message: 'you register success!!!' });
 	}
 	oilwell(req: Request, res: Response, next: NextFunction): void {
-		res.render('pages/oilwell');
+		res.render('pages/oilwell', { message: 'you register success!!!' });
 	}
 	report(req: Request, res: Response, next: NextFunction): void {
 		if (!req.files || Object.keys(req.files).length === 0) {
@@ -137,7 +141,7 @@ export class UserController extends BaseController implements IUserController {
 				if (err) return res.status(500).send(err);
 
 				// res.send('File uploaded!');
-				res.render('pages/report');
+				res.render('pages/report', { message: 'you register success!!!' });
 			});
 		}
 	}

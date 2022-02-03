@@ -1,0 +1,69 @@
+For MySql
+sudo service mysql start - запуск сервер 
+sudo service mysql stop - остановка сервера
+sudo service --status-all | grep mysql - проверка статуса
+sudo systemctl status mysql - полная проверка статуса
+sudo mysql -u root -p - подключение клиента
+автоматический запуск отключен в файле /etc/init/mysql.conf - закоменнтированна строка start
+mysql> source /home/sany/SQL/databases/mysqlsampledatabase.sql - загрузка базы на сервер
+mysql> show databases; - отображение загруженных баз
+mysql> use 'namedatabase' - выбор базы данных
+mysql> show tables; - показать таблицы выбрнной базы
+mysql> show columns from 'tablename'; - показать все колонки таблицы
+mysql> SELECT * FROM 'employees'; - выбрать все колонки из таблицы
+mysql> select 'lastName', 'jobTitle' from 'employees'; - показать конкретные колонки в таблице
+-----Сортировка выбранных полей-----------
+SELECT 
+   select_list
+FROM 
+   table_name
+ORDER BY 
+   column1 [ASC|DESC], 
+   column2 [ASC|DESC],
+   ...;
+   -----------выбор в соответствии с условиями-------------------
+   SELECT 
+    select_list
+FROM
+    table_name
+WHERE
+    search_condition;
+    В выражении search_condition можно использовать AND, OR, BETWEEN, IN, NULL, >, <, =, != (<>), >=, <=, etc.
+    в конце можно добавить сортировку  ORDER BY ...
+    *******************************************************************
+    mysql-workbench -  запуск графической оболочки
+    ---------------Создание пользователя-------------
+    ---для доступа через workbench----------
+    -----sany@locallhost  Secure1pass!---------
+    CREATE USER [IF NOT EXISTS] account_name
+	IDENTIFIED BY 'password';
+--------------------------------------------------
+grant all privileges on classicmodels.* to sany@localhost; - предоставление прав на базу данных
+FLUSH PRIVILEGES - обновление привелегий
+SELECT user,host FROM mysql.user; - список пользовтелей базы данных
+ ---------------------------------------------------------------------
+ drop user 'root'@'%'; - удаление пользователя;
+ SET PASSWORD FOR 'root'@'localhost' = 'root'; - смена пароля
+ SHOW VARIABLES LIKE 'validate_password%'; - показывает уровень политики проверки паролей
+ SET GLOBAL validate_password.policy=LOW; - установить низкий уровень политики 
+ SET GLOBAL validate_password.length=4; - установка длинны пароля в 4 символа.
+  !!!  set global validate_password.check_user_name = 0; - только после этого смог задать пароль 'root'
+  
+  *******************************POSTGRESQL*************************************
+  User		Password
+  postgres	postgres
+  info_comp	123456
+  
+  ******************************pgAdmin4*****************************************
+  User:  	thcerenkovskiy@gmail.com
+  Password:  	111111
+  
+  
+  
+  
+  
+
+
+
+
+
