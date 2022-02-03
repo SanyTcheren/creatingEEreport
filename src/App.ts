@@ -10,6 +10,7 @@ import { IConfigService } from './config/config.service.interface';
 import { IUserController } from './user/user.controller.interface';
 import { urlencoded } from 'body-parser';
 import fileUpload from 'express-fileupload';
+import { IReportController } from './report/report.controller.interface';
 
 @injectable()
 export class App {
@@ -22,6 +23,7 @@ export class App {
 		@inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter,
 		@inject(TYPES.IConfigService) private configService: IConfigService,
 		@inject(TYPES.IUserController) private userController: IUserController,
+		@inject(TYPES.IReportController) private reportController: IReportController,
 	) {
 		this.app = express();
 		this.port = configService.get('PORT');
@@ -34,6 +36,7 @@ export class App {
 
 	useRotes(): void {
 		this.app.use('/', this.userController.router);
+		this.app.use('/', this.reportController.router);
 	}
 
 	useExceptionFilter(): void {

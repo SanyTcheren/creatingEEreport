@@ -6,6 +6,8 @@ import { ExceptionFilter } from './error/exception.filter';
 import { IExceptionFilter } from './error/exception.fiter.interface';
 import { ILogger } from './logger/logger.interface';
 import { LoggerService } from './logger/logger.service';
+import { ReportController } from './report/report.controller';
+import { IReportController } from './report/report.controller.interface';
 import { TYPES } from './types';
 import { UserController } from './user/user.controller';
 import { IUserController } from './user/user.controller.interface';
@@ -21,6 +23,7 @@ const appBinding = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IExceptionFilter>(TYPES.IExceptionFilter).to(ExceptionFilter).inSingletonScope();
 	bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope();
 	bind<IUserController>(TYPES.IUserController).to(UserController);
+	bind<IReportController>(TYPES.IReportController).to(ReportController);
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {
