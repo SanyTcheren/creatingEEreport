@@ -6,6 +6,9 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
 import path from 'path';
+import { ValidateMiddleware } from '../common/validate.middleware';
+import { UserLoginDto } from './dto/user-login.dto';
+import { UserRegisterDto } from './dto/user-register.dto';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -13,22 +16,16 @@ export class UserController extends BaseController implements IUserController {
 		super(logger);
 		this.bindRotes([
 			{
-				path: '/',
+				path: '/start',
 				method: 'get',
 				func: this.start,
 				middlewares: [],
 			},
 			{
 				path: '/login',
-				method: 'get',
-				func: this.login,
-				middlewares: [],
-			},
-			{
-				path: '/login',
 				method: 'post',
 				func: this.login,
-				middlewares: [],
+				middlewares: [new ValidateMiddleware(UserLoginDto)],
 			},
 			{
 				path: '/register',
@@ -39,21 +36,40 @@ export class UserController extends BaseController implements IUserController {
 			{
 				path: '/register',
 				method: 'post',
-				func: this.register,
-				middlewares: [],
+				func: this.registration,
+				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
 		]);
 	}
 	start(req: Request, res: Response, next: NextFunction): void {
-		res.render('pages/start');
-		// this.ok(res, 'sany');
+		this.logger.log('[user controller] load login page');
+		res.render('pages/login', { message: 'авторизуйтесь либо зарегистрируйтесь' });
 	}
 	login(req: Request, res: Response, next: NextFunction): void {
-		res.render('pages/login', { message: 'you register success!!!' });
-		// this.ok(res, 'sany');
+		if (req.body.unvalidate) {
+			this.unvalidateRender(req, res, 'pages/login');
+		} else {
+			this.logger.log('[user controller] user login, go to the general page');
+			res.render('pages/general', {
+				message: 'введите общие данные по буровой установке и месторождению',
+			});
+		}
 	}
 	register(req: Request, res: Response, next: NextFunction): void {
-		res.render('pages/register', { message: 'you register success!!!' });
+		this.logger.log('[user controller] go to the register page');
+		res.render('pages/register', {
+			message: 'зарегистрируйтесь и перейдите к авторизации',
+		});
+	}
+	registration(req: Request, res: Response, next: NextFunction): void {
+		if (req.body.unvalidate) {
+			this.unvalidateRender(req, res, 'pages/register');
+		} else {
+			this.logger.log('[user controller] go to the login page');
+			res.render('pages/login', {
+				message: 'вы зарегистрировались, теперь авторизуйтесь',
+			});
+		}
 	}
 	info(req: Request, res: Response, next: NextFunction): void {
 		return;

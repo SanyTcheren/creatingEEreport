@@ -10,24 +10,20 @@
 	<main>
 
 		<div class="container">
-			<section id="content">
-				<form action="/report" method='post' encType="multipart/form-data"">
-					<h1>Input</h1>
-					<div class=" form-control">
-					<input id=" userfile" type="file" name="sampleFile" class="file">
+			<%- include ('../partials/message') %>
+				<section id="content">
+					<form action="/report/input" method='post' encType="multipart/form-data">
+						<h1>Профиль мощности</h1>
+						<div class=" form-control">
+							<input type="file" name="dataFile" required>
+						</div>
+						<div>
+							<input type="submit" value="Загрузить" class="button-primary" />
+						</div>
+					</form>
+				</section>
+
 		</div>
-		<div>
-			<input type="submit" value="Upload" />
-			<div>
-				<a href="/login">login</a>
-				<a href="/general">general</a>
-				<a href="/oilwell">oilwell</a>
-			</div>
-		</div>
-		</form>
-		</section>
-		<%- include ('../partials/message') %>
-			</div>
 
 	</main>
 

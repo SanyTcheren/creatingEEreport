@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Router, Response } from 'express';
+import { Router, Response, Request } from 'express';
 import { injectable } from 'inversify';
 import { ILogger } from '../logger/logger.interface';
 import { ExpressReturnType, IRouteApp } from './route.interface';
@@ -8,7 +8,7 @@ import { ExpressReturnType, IRouteApp } from './route.interface';
 export abstract class BaseController {
 	private readonly _router;
 
-	constructor(private logger: ILogger) {
+	constructor(protected logger: ILogger) {
 		this._router = Router();
 	}
 
@@ -24,6 +24,11 @@ export abstract class BaseController {
 			const pipline = middleware ? [...middleware, handler] : handler;
 			this._router[route.method](route.path, pipline);
 		}
+	}
+
+	public unvalidateRender(req: Request, res: Response, page: string): void {
+		this.logger.warn(`[base controller] ${req.body.unvalidate}`);
+		res.render(page, { message: `Необходимо исправить данные. ${req.body.unvalidate}` });
 	}
 
 	public created(res: Response): ExpressReturnType {

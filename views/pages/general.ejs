@@ -10,29 +10,28 @@
 	<main>
 
 		<div class="container">
-			<section id="content">
-				<form action="/oilwell" method="post">
-					<h1>General</h1>
-					<div>
-						<input type="text" placeholder="тип буровой установки" id="" />
-					</div>
-					<div>
-						<input type="text" placeholder="номер бу" id="" />
-					</div>
-					<div>
-						<input type="text" placeholder="месторождение" id="" />
-					</div>
-					<div>
-						<input type="text" placeholder="куст" id="" />
-					</div>
-					<div>
-						<input type="submit" value="Oil Well" />
-						<a href="/login">Login</a>
-					</div>
-				</form>
-
-			</section>
 			<%- include ('../partials/message') %>
+				<section id="content">
+					<form action="/report/general" method="post">
+						<h1>Общие данные</h1>
+						<div>
+							<input type="text" placeholder="тип буровой установки" required name="type" />
+						</div>
+						<div>
+							<input type="text" placeholder="номер буровой установки" required name="number" />
+						</div>
+						<div>
+							<input type="text" placeholder="месторождение" required name="field" />
+						</div>
+						<div>
+							<input type="text" placeholder="куст" required name="bush" />
+						</div>
+						<div>
+							<input type="submit" value="Продолжить" class="button-primary" />
+						</div>
+					</form>
+
+				</section>
 		</div>
 
 	</main>

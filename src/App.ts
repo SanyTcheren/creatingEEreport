@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import express, { Express } from 'express';
+import express, { Express, Request, Response } from 'express';
 import { Server } from 'http';
 import path from 'path';
 import { inject, injectable } from 'inversify';
@@ -34,9 +34,16 @@ export class App {
 		this.app.use(fileUpload());
 	}
 
+	useStartPage(): void {
+		this.app.use('/start', (req: Request, res: Response) => {
+			this.logger.log(`[application] load first page`);
+			res.render('pages/start');
+		});
+	}
+
 	useRotes(): void {
-		this.app.use('/', this.userController.router);
-		this.app.use('/', this.reportController.router);
+		this.app.use('/user', this.userController.router);
+		this.app.use('/report', this.reportController.router);
 	}
 
 	useExceptionFilter(): void {
@@ -47,10 +54,11 @@ export class App {
 		this.app.use(express.static(path.join(__dirname, '../public')));
 		this.app.set('view engine', 'ejs');
 		this.useMiddleware();
+		this.useStartPage();
 		this.useRotes();
 		this.useExceptionFilter();
 		this.server = this.app.listen(Number(this.port));
-		this.logger.log(`[application] Сервер запущен на http://localhost:${this.port}`);
+		this.logger.log(`[application] Сервер запущен на http://localhost:${this.port}/start`);
 	}
 
 	public close(): void {

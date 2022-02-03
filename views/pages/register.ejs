@@ -10,26 +10,26 @@
 	<main>
 
 		<div class="container">
-			<section id="content">
-				<form action="/login" method="post">
-					<h1>Register</h1>
-					<div>
-						<input type="text" placeholder="Name" required="" id="userename" />
-					</div>
-					<div>
-						<input type="text" placeholder="Email" required="" id="useremail" />
-					</div>
-					<div>
-						<input type="password" placeholder="Password" required="" id="password" />
-					</div>
-					<div>
-						<input type="submit" value="Register" />
-						<a href="/login" class="button button-primary button-large>register">login</a>
-					</div>
-				</form>
-
-			</section>
 			<%- include ('../partials/message') %>
+				<section id="content">
+					<form action="/user/register" method="post">
+						<h1>Регистрация</h1>
+						<div>
+							<input name="name" type="text" placeholder="Name" required="" id="userename" />
+						</div>
+						<div>
+							<input name="email" type="text" placeholder="Email" required="" id="useremail" />
+						</div>
+						<div>
+							<input name="password" type="password" placeholder="Password" required="" id="password" />
+						</div>
+						<div>
+							<input type="submit" value="Регистрация" class="button-primary" />
+						</div>
+					</form>
+
+				</section>
+
 		</div>
 
 	</main>

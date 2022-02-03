@@ -7,40 +7,33 @@
 
 <body>
 
-	<!-- <header> -->
-	<!-- <%- include ('../partials/header') %> -->
-	<!-- </header> -->
-
 	<main>
 
 		<div class="container">
-			<section id="content">
-				<form action="">
-					<h1>Oil well</h1>
-					<div>
-						<input type="text" placeholder="скважина" id="" />
-						<select required size="1" name="name[]"" class=" select-css">
-							<option value="Да">пзр</option>
-							<option value="Нет">бурение</option>
-						</select>
-					</div>
-					<div>
-						<input type="datetime-local" атрибуты />
-						<input type="datetime-local" атрибуты />
-					</div>
-					<div>
-						<input type="submit" value="Add" />
-					</div>
-				</form>
-				<form action="/input">
-					<button type="submit" id="saveButton">Report</button>
-				</form>
-				<div>
-					<a href="/login">login</a>
-					<a href="/general">general</a>
-				</div>
-			</section>
 			<%- include ('../partials/message') %>
+				<section id="content">
+					<form action="/report/addwell" method="post">
+						<h1>Скважины</h1>
+						<div>
+							<input type="text" placeholder="скважина" required name="well" />
+							<select required size="1" name="detail" class="select-css">
+								<option value="drill">бурение</option>
+								<option value="prepare">пзр</option>
+							</select>
+						</div>
+						<div>
+							<input type="datetime-local" required name="start" />
+							<input type="datetime-local" required name="end" />
+						</div>
+						<div>
+							<input type="submit" value="Добавить" class="button-primary" />
+						</div>
+						<div>
+							<a class="button" href="/report/oilwell">Далее</a>
+						</div>
+					</form>
+				</section>
+
 		</div>
 
 	</main>

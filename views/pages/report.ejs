@@ -7,28 +7,18 @@
 
 <body>
 
-	<!-- <header> -->
-	<!-- <%- include ('../partials/header') %> -->
-	<!-- </header> -->
-
 	<main>
 
 		<div class="container">
-			<section id="content">
-				<form action="/save" method="post">
-					<h1>Report</h1>
-					<div>
-						<input type="submit" value="Save" />
-						<div>
-							<a href="/login">login</a>
-							<a href="/general">general</a>
-							<a href="/oilwell">oilwell</a>
-							<a href="/input">input</a>
-						</div>
-					</div>
-				</form>
-			</section>
 			<%- include ('../partials/message') %>
+				<section id="content">
+					<form action="/report/save" method="get">
+						<h1>Отчет</h1>
+						<div>
+							<input type="submit" value="Сохранить" class="button-primary" />
+						</div>
+					</form>
+				</section>
 		</div>
 
 	</main>
