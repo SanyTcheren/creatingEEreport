@@ -21,9 +21,9 @@ export class OilWell {
 		return this._deatil;
 	}
 	get start(): string {
-		return this._start.format('DD.MM.YYYY HH:mm');
+		return this._start.format('YYYY-MM-DD HH:mm');
 	}
 	get end(): string {
-		return this._end.format('DD.MM.YYYY HH:mm');
+		return this._end.format('YYYY-MM-DD HH:mm');
 	}
 }

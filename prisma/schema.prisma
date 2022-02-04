@@ -16,3 +16,24 @@ model UserModel {
   password String
   name     String
 }
+
+model OilWellModel {
+  id     Int    @id @default(autoincrement())
+  well   String
+  detail String
+  start  String
+  end    String
+
+  ReportModel   ReportModel? @relation(fields: [reportModelId], references: [id])
+  reportModelId Int?
+}
+
+model ReportModel {
+  id       Int            @id @default(autoincrement())
+  type     String
+  number   String
+  field    String
+  bush     String
+  dataFile String?
+  wells    OilWellModel[]
+}
