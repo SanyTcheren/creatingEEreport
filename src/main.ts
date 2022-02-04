@@ -1,5 +1,6 @@
 import { Container, ContainerModule, interfaces } from 'inversify';
 import { App } from './App';
+import { AuthMiddleWare } from './common/auth.middleware';
 import { ConfigService } from './config/config.service';
 import { IConfigService } from './config/config.service.interface';
 import { PrismaService } from './database/prisma.service';
@@ -32,6 +33,7 @@ const appBinding = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IUserService>(TYPES.IUserService).to(UserService);
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 	bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository).inSingletonScope();
+	bind<AuthMiddleWare>(TYPES.AuthMiddleWare).to(AuthMiddleWare);
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {

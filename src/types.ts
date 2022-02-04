@@ -8,4 +8,5 @@ export const TYPES = {
 	IUserService: Symbol.for('IUserService'),
 	PrismaService: Symbol.for('PrismaService'),
 	IUserRepository: Symbol.for('IUserRepository'),
+	AuthMiddleWare: Symbol.for('AuthMiddleware'),
 };

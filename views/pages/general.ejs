@@ -14,6 +14,7 @@
 				<section id="content">
 					<form action="/report/general" method="post">
 						<h1>Общие данные</h1>
+						<input type="hidden" value="<%=jwt%>" name="jwt">
 						<div>
 							<input type="text" placeholder="тип буровой установки" required name="type" />
 						</div>

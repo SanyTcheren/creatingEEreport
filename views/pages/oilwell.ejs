@@ -14,6 +14,7 @@
 				<section id="content">
 					<form action="/report/addwell" method="post">
 						<h1>Скважины</h1>
+						<input type="hidden" value="<%=jwt%>" name="jwt">
 						<div>
 							<input type="text" placeholder="скважина" required name="well" />
 							<select required size="1" name="detail" class="select-css">
@@ -28,9 +29,10 @@
 						<div>
 							<input type="submit" value="Добавить" class="button-primary" />
 						</div>
-						<div>
-							<a class="button" href="/report/oilwell">Далее</a>
-						</div>
+					</form>
+					<form action="/report/oilwell" method="post">
+						<input type="hidden" value="<%=jwt%>" name="jwt">
+						<input type="submit" value="Далее" class="button-primary" />
 					</form>
 				</section>
 

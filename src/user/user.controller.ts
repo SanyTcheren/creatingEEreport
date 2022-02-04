@@ -11,12 +11,16 @@ import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { UserService } from './user.service';
 import { IUserService } from './user.service.interface';
+import { sign } from 'jsonwebtoken';
+import { ConfigService } from '../config/config.service';
+import { IConfigService } from '../config/config.service.interface';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
 	constructor(
 		@inject(TYPES.ILogger) logger: ILogger,
 		@inject(TYPES.IUserService) private userService: IUserService,
+		@inject(TYPES.IConfigService) private configeService: IConfigService,
 	) {
 		super(logger);
 		this.bindRotes([
@@ -55,9 +59,11 @@ export class UserController extends BaseController implements IUserController {
 			this.unvalidateRender(req, res, 'pages/login');
 		} else {
 			if (await this.userService.validateUser(req.body)) {
+				const jwt = await this.signJWT(req.body.email, this.configeService.get('SECRET'));
 				this.logger.log('[user controller] user login, go to the general page');
 				res.render('pages/general', {
 					message: 'введите общие данные по буровой установке и месторождению',
+					jwt,
 				});
 			} else {
 				this.logger.log('[user controller] user don`t validate for login');
@@ -93,5 +99,27 @@ export class UserController extends BaseController implements IUserController {
 	}
 	info(req: Request, res: Response, next: NextFunction): void {
 		return;
+	}
+
+	private signJWT(email: string, secret: string): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			sign(
+				{
+					email,
+					iat: Math.floor(Date.now() / 1000),
+				},
+				secret,
+				{
+					algorithm: 'HS256',
+				},
+				(err, token) => {
+					if (err) {
+						reject(err);
+					} else if (token) {
+						resolve(token);
+					}
+				},
+			);
+		});
 	}
 }
