@@ -11,15 +11,37 @@ export class ReportRepository implements IReportRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
 	async create({ email, type, number, field, bush }: Report): Promise<ReportModel> {
-		return this.prismaService.client.reportModel.create({
-			data: {
-				email,
-				type,
-				number,
-				field,
-				bush,
-			},
-		});
+		if (await this.find(email)) {
+			await this.prismaService.client.oilWellModel.deleteMany({
+				where: {
+					report: {
+						email,
+					},
+				},
+			});
+			return this.prismaService.client.reportModel.update({
+				data: {
+					email,
+					type,
+					number,
+					field,
+					bush,
+				},
+				where: {
+					email,
+				},
+			});
+		} else {
+			return this.prismaService.client.reportModel.create({
+				data: {
+					email,
+					type,
+					number,
+					field,
+					bush,
+				},
+			});
+		}
 	}
 
 	async find(email: string): Promise<ReportModel | null> {
@@ -43,6 +65,17 @@ export class ReportRepository implements IReportRepository {
 				report: {
 					connect: { email },
 				},
+			},
+		});
+	}
+
+	async setFile(dataFile: string, email: string): Promise<ReportModel | null> {
+		return await this.prismaService.client.reportModel.update({
+			data: {
+				dataFile,
+			},
+			where: {
+				email,
 			},
 		});
 	}

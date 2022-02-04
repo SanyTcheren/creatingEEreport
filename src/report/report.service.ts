@@ -14,7 +14,7 @@ export class ReportService implements IReportService {
 
 	async createReport(dto: ReportGeneralDto): Promise<ReportModel> {
 		const newReport = new Report(dto.email, dto.type, dto.number, dto.field, dto.bush);
-		return this.userRepository.create(newReport);
+		return await this.userRepository.create(newReport);
 	}
 
 	async addOilWell({
@@ -26,5 +26,9 @@ export class ReportService implements IReportService {
 	}: ReportAddWellDto): Promise<OilWellModel | null> {
 		const newOilWell = new OilWell(well, detail, start, end);
 		return await this.userRepository.addWell(newOilWell, email);
+	}
+
+	async setDataFile(dataFile: string, email: string): Promise<ReportModel | null> {
+		return await this.userRepository.setFile(dataFile, email);
 	}
 }

@@ -6,6 +6,7 @@ import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
 import { UploadedFile } from 'express-fileupload';
 import path from 'path';
+import fs from 'fs';
 import { IReportController } from './report.controller.interface';
 import { ReportGeneralDto } from './dto/report-general.dto';
 import { ValidateMiddleware } from '../common/validate.middleware';
@@ -14,6 +15,7 @@ import { AuthMiddleWare } from '../common/auth.middleware';
 import { IConfigService } from '../config/config.service.interface';
 import { IReportService } from './report.service.interface';
 import { ReportOilWellDto } from './dto/report-oilwell.dto';
+import { ReportInputDto } from './dto/report-input.dto';
 
 @injectable()
 export class ReportController extends BaseController implements IReportController {
@@ -101,30 +103,62 @@ export class ReportController extends BaseController implements IReportControlle
 			});
 		}
 	}
-	input(req: Request, res: Response, next: NextFunction): void {
+	async input(
+		req: Request<{}, {}, ReportInputDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
 		if (!req.files || Object.keys(req.files).length === 0) {
 			this.logger.warn('[report controller] input don`t selected data-file');
-			res.render('pages/input', { message: '!! не выбран файл с данными !!', jwt: req.body.jwt });
+			res.render('pages/input', {
+				message: '!! не выбран файл с данными !!',
+				jwt: req.body.jwt,
+				email: req.body.email,
+			});
 		} else {
 			const dataFile = req.files.dataFile as UploadedFile;
-			const uploadPath = path.join(__dirname, '../../public/files', dataFile.name);
-
+			fs.mkdir(
+				path.join(__dirname, `../../public/files/${req.body.email.split('@')[0]}`),
+				(err) => {
+					if (err) {
+						this.logger.error(
+							'[report controller] Не удалось создать директорию для хранения файлов',
+						);
+					} else {
+						this.logger.log('[report controller] создана директория для хранения файлов');
+					}
+				},
+			);
+			const uploadPath = path.join(
+				__dirname,
+				`../../public/files/${req.body.email.split('@')[0]}`,
+				dataFile.name,
+			);
+			await this.reportService.setDataFile(uploadPath, req.body.email);
 			dataFile.mv(uploadPath, (err) => {
 				if (err) {
 					this.logger.warn('[report controller] input don`t upload data-file');
 					res.render('pages/input', {
 						message: '!! файл с данными не загрузился !!',
 						jwt: req.body.jwt,
+						email: req.body.email,
 					});
 				} else {
-					res.render('pages/report', { message: 'сохраните отчет', jwt: req.body.jwt });
+					res.render('pages/report', {
+						message: 'сохраните отчет',
+						jwt: req.body.jwt,
+						email: req.body.email,
+					});
 				}
 			});
 		}
 	}
 
 	save(req: Request, res: Response, next: NextFunction): void {
-		const file = path.join(__dirname, '../../public/files/report.xlsx');
+		const file = path.join(
+			__dirname,
+			`../../public/files/${req.body.email.split('@')[0]}/report.xlsx`,
+		);
 		res.download(file);
 		this.logger.log('[report controller] save report');
 	}

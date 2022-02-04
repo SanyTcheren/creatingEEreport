@@ -6,4 +6,5 @@ export interface IReportRepository {
 	create: (report: Report) => Promise<ReportModel>;
 	find: (email: string) => Promise<ReportModel | null>;
 	addWell: (well: OilWell, email: string) => Promise<OilWellModel | null>;
+	setFile: (dataFile: string, email: string) => Promise<ReportModel | null>;
 }
