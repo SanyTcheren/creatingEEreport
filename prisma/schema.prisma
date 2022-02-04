@@ -30,6 +30,7 @@ model OilWellModel {
 
 model ReportModel {
   id       Int            @id @default(autoincrement())
+  email    String
   type     String
   number   String
   field    String

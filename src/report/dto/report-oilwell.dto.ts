@@ -1,6 +1,7 @@
 import { isDateString, IsDateString, IsString } from 'class-validator';
+import { ValidateDto } from '../../types/validateDto';
 
-export class ReportOilwellDto {
+export class ReportOilwellDto implements ValidateDto {
 	@IsString({ message: 'Не указан тип буровой установки' })
 	well: string;
 
@@ -12,4 +13,8 @@ export class ReportOilwellDto {
 
 	@IsDateString({ message: 'Не указно время оканчания работ' })
 	end: string;
+
+	jwt?: string;
+
+	unvalidate?: string;
 }

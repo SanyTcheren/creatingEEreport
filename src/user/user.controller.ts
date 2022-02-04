@@ -54,16 +54,21 @@ export class UserController extends BaseController implements IUserController {
 		this.logger.log('[user controller] load login page');
 		res.render('pages/login', { message: 'авторизуйтесь либо зарегистрируйтесь' });
 	}
-	async login(req: Request, res: Response, next: NextFunction): Promise<void> {
-		if (req.body.unvalidate) {
-			this.unvalidateRender(req, res, 'pages/login');
+	async login(
+		{ body }: Request<{}, {}, UserLoginDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		if (body.unvalidate) {
+			this.unvalidateRender(body, res, 'pages/login');
 		} else {
-			if (await this.userService.validateUser(req.body)) {
-				const jwt = await this.signJWT(req.body.email, this.configeService.get('SECRET'));
+			if (await this.userService.validateUser(body)) {
+				const jwt = await this.signJWT(body.email, this.configeService.get('SECRET'));
 				this.logger.log('[user controller] user login, go to the general page');
 				res.render('pages/general', {
 					message: 'введите общие данные по буровой установке и месторождению',
 					jwt,
+					email: body.email,
 				});
 			} else {
 				this.logger.log('[user controller] user don`t validate for login');
@@ -79,11 +84,15 @@ export class UserController extends BaseController implements IUserController {
 			message: 'зарегистрируйтесь и перейдите к авторизации',
 		});
 	}
-	async registration(req: Request, res: Response, next: NextFunction): Promise<void> {
-		if (req.body.unvalidate) {
-			this.unvalidateRender(req, res, 'pages/register');
+	async registration(
+		{ body }: Request<{}, {}, UserRegisterDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		if (body.unvalidate) {
+			this.unvalidateRender(body, res, 'pages/register');
 		} else {
-			const newUser = await this.userService.createUser(req.body);
+			const newUser = await this.userService.createUser(body);
 			if (!newUser) {
 				this.logger.warn('[user controller] don`t create user');
 				res.render('pages/register', {

@@ -3,6 +3,7 @@ import { Router, Response, Request } from 'express';
 import { injectable } from 'inversify';
 import { ILogger } from '../logger/logger.interface';
 import { ExpressReturnType, IRouteApp } from './route.interface';
+import { ValidateDto } from '../types/validateDto';
 
 @injectable()
 export abstract class BaseController {
@@ -26,9 +27,9 @@ export abstract class BaseController {
 		}
 	}
 
-	public unvalidateRender(req: Request, res: Response, page: string): void {
-		this.logger.warn(`[base controller] ${req.body.unvalidate}`);
-		res.render(page, { message: `Необходимо исправить данные. ${req.body.unvalidate}` });
+	public unvalidateRender(body: ValidateDto, res: Response, page: string): void {
+		this.logger.warn(`[base controller] ${body.unvalidate}`);
+		res.render(page, { message: `Необходимо исправить данные. ${body.unvalidate}` });
 	}
 
 	public created(res: Response): ExpressReturnType {

@@ -10,6 +10,7 @@ import { ILogger } from './logger/logger.interface';
 import { LoggerService } from './logger/logger.service';
 import { ReportController } from './report/report.controller';
 import { IReportController } from './report/report.controller.interface';
+import { ReportRepository } from './report/report.repository';
 import { TYPES } from './types';
 import { UserController } from './user/user.controller';
 import { IUserController } from './user/user.controller.interface';
@@ -17,6 +18,9 @@ import { UserRepository } from './user/user.repository';
 import { IUserRepository } from './user/user.repository.interace';
 import { UserService } from './user/user.service';
 import { IUserService } from './user/user.service.interface';
+import { IReportRepository } from './report/report.repository.interface';
+import { IReportService } from './report/report.service.interface';
+import { ReportService } from './report/report.service';
 
 interface IBootstrapReturn {
 	appContainer: Container;
@@ -34,6 +38,8 @@ const appBinding = new ContainerModule((bind: interfaces.Bind) => {
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 	bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository).inSingletonScope();
 	bind<AuthMiddleWare>(TYPES.AuthMiddleWare).to(AuthMiddleWare);
+	bind<IReportRepository>(TYPES.IReportRepository).to(ReportRepository);
+	bind<IReportService>(TYPES.IReportService).to(ReportService);
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {

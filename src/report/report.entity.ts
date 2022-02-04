@@ -5,6 +5,7 @@ export class Report {
 	private _dataFile: string;
 
 	constructor(
+		private _email: string,
 		private _type: string,
 		private _number: string,
 		private _field: string,
@@ -13,6 +14,9 @@ export class Report {
 		this._wells = [];
 	}
 
+	get email(): string {
+		return this._email;
+	}
 	get type(): string {
 		return this._type;
 	}
