@@ -7,7 +7,7 @@ export class OilWell {
 
 	constructor(
 		private readonly _well: string,
-		private readonly _deatil: Detail,
+		private readonly _detail: Detail,
 		start: string,
 		end: string,
 	) {
@@ -18,7 +18,7 @@ export class OilWell {
 		return this._well;
 	}
 	get detail(): string {
-		return this._deatil;
+		return this._detail;
 	}
 	get start(): string {
 		return this._start.format('YYYY-MM-DD HH:mm');

@@ -1,7 +1,8 @@
-import { ReportModel } from '@prisma/client';
+import { OilWellModel, ReportModel } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import { PrismaService } from '../database/prisma.service';
 import { TYPES } from '../types';
+import { OilWell } from './oilwell';
 import { Report } from './report.entity';
 import { IReportRepository } from './report.repository.interface';
 
@@ -25,6 +26,23 @@ export class ReportRepository implements IReportRepository {
 		return this.prismaService.client.reportModel.findFirst({
 			where: {
 				email,
+			},
+		});
+	}
+
+	async addWell(
+		{ well, detail, start, end }: OilWell,
+		email: string,
+	): Promise<OilWellModel | null> {
+		return await this.prismaService.client.oilWellModel.create({
+			data: {
+				well,
+				detail,
+				start,
+				end,
+				report: {
+					connect: { email },
+				},
 			},
 		});
 	}

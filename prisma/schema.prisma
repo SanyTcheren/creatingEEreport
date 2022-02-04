@@ -12,25 +12,24 @@ datasource db {
 
 model UserModel {
   id       Int    @id @default(autoincrement())
-  email    String
+  email    String @unique
   password String
   name     String
 }
 
 model OilWellModel {
-  id     Int    @id @default(autoincrement())
-  well   String
-  detail String
-  start  String
-  end    String
-
-  ReportModel   ReportModel? @relation(fields: [reportModelId], references: [id])
-  reportModelId Int?
+  id       Int         @id @default(autoincrement())
+  well     String
+  detail   String
+  start    String
+  end      String
+  reportId Int
+  report   ReportModel @relation(fields: [reportId], references: [id])
 }
 
 model ReportModel {
   id       Int            @id @default(autoincrement())
-  email    String
+  email    String         @unique
   type     String
   number   String
   field    String

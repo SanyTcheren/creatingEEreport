@@ -9,11 +9,11 @@ import path from 'path';
 import { IReportController } from './report.controller.interface';
 import { ReportGeneralDto } from './dto/report-general.dto';
 import { ValidateMiddleware } from '../common/validate.middleware';
-import { ReportOilwellDto } from './dto/report-oilwell.dto';
+import { ReportAddWellDto } from './dto/report-addwell.dto';
 import { AuthMiddleWare } from '../common/auth.middleware';
 import { IConfigService } from '../config/config.service.interface';
-import { IReportRepository } from './report.repository.interface';
 import { IReportService } from './report.service.interface';
+import { ReportOilWellDto } from './dto/report-oilwell.dto';
 
 @injectable()
 export class ReportController extends BaseController implements IReportController {
@@ -41,7 +41,7 @@ export class ReportController extends BaseController implements IReportControlle
 				path: '/addwell',
 				method: 'post',
 				func: this.addwell,
-				middlewares: [new ValidateMiddleware(ReportOilwellDto), authMiddleWare],
+				middlewares: [new ValidateMiddleware(ReportAddWellDto), authMiddleWare],
 			},
 			{
 				path: '/input',
@@ -65,7 +65,7 @@ export class ReportController extends BaseController implements IReportControlle
 		if (body.unvalidate) {
 			this.unvalidateRender(body, res, 'pages/general');
 		} else {
-			const newReport = await this.reportService.createReport(body);
+			await this.reportService.createReport(body);
 			this.logger.log('[report controller] go to the oil well page');
 			res.render('pages/oilwell', {
 				message: 'введите данные по скважинам',
@@ -74,23 +74,30 @@ export class ReportController extends BaseController implements IReportControlle
 			});
 		}
 	}
-	oilwell(req: Request, res: Response, next: NextFunction): void {
+	oilwell({ body }: Request<{}, {}, ReportOilWellDto>, res: Response, next: NextFunction): void {
 		this.logger.log('[report controller] go to the input page');
 		res.render('pages/input', {
 			message: 'выберите и загрузите файл с профилем мощности',
-			jwt: req.body.jwt,
+			jwt: body.jwt,
+			email: body.email,
 		});
 	}
-	addwell({ body }: Request<{}, {}, ReportOilwellDto>, res: Response, next: NextFunction): void {
+	async addwell(
+		{ body }: Request<{}, {}, ReportAddWellDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
 		if (body.unvalidate) {
 			this.unvalidateRender(body, res, 'pages/oilwell');
 		} else {
+			await this.reportService.addOilWell(body);
 			this.logger.log('[report controller] add well');
 			res.render('pages/oilwell', {
 				message: `скважина ${body.well} ${body.detail == 'drill' ? 'бурение' : 'пзр'} начало: ${
 					body.start
 				} окончание: ${body.end}`,
 				jwt: body.jwt,
+				email: body.email,
 			});
 		}
 	}

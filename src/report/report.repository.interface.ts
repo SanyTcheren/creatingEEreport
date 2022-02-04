@@ -1,7 +1,9 @@
-import { ReportModel } from '@prisma/client';
+import { OilWellModel, ReportModel } from '@prisma/client';
+import { OilWell } from './oilwell';
 import { Report } from './report.entity';
 
 export interface IReportRepository {
 	create: (report: Report) => Promise<ReportModel>;
 	find: (email: string) => Promise<ReportModel | null>;
+	addWell: (well: OilWell, email: string) => Promise<OilWellModel | null>;
 }

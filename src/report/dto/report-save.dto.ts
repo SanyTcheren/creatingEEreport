@@ -1,7 +1,7 @@
 import { ValidateDto } from '../../types/validateDto';
 import { IsEmail } from 'class-validator';
 
-export class ReportOilWellDto implements ValidateDto {
+export class ReportSaveDto implements ValidateDto {
 	@IsEmail({ message: 'Отсутствуют даннные о пользователе' })
 	email: string;
 

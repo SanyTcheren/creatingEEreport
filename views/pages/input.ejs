@@ -15,6 +15,7 @@
 					<form action="/report/input" method='post' encType="multipart/form-data">
 						<h1>Профиль мощности</h1>
 						<input type="hidden" value="<%=jwt%>" name="jwt">
+						<input type="hidden" value="<%=email%>" name="email">
 						<div class=" form-control">
 							<input type="file" name="dataFile" required>
 						</div>
