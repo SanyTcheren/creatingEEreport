@@ -9,10 +9,15 @@ import path from 'path';
 import { ValidateMiddleware } from '../common/validate.middleware';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
+import { UserService } from './user.service';
+import { IUserService } from './user.service.interface';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILogger) logger: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) logger: ILogger,
+		@inject(TYPES.IUserService) private userService: IUserService,
+	) {
 		super(logger);
 		this.bindRotes([
 			{
@@ -45,14 +50,21 @@ export class UserController extends BaseController implements IUserController {
 		this.logger.log('[user controller] load login page');
 		res.render('pages/login', { message: 'авторизуйтесь либо зарегистрируйтесь' });
 	}
-	login(req: Request, res: Response, next: NextFunction): void {
+	async login(req: Request, res: Response, next: NextFunction): Promise<void> {
 		if (req.body.unvalidate) {
 			this.unvalidateRender(req, res, 'pages/login');
 		} else {
-			this.logger.log('[user controller] user login, go to the general page');
-			res.render('pages/general', {
-				message: 'введите общие данные по буровой установке и месторождению',
-			});
+			if (await this.userService.validateUser(req.body)) {
+				this.logger.log('[user controller] user login, go to the general page');
+				res.render('pages/general', {
+					message: 'введите общие данные по буровой установке и месторождению',
+				});
+			} else {
+				this.logger.log('[user controller] user don`t validate for login');
+				res.render('pages/login', {
+					message: 'неверный логин или пароль, попробуйте снова',
+				});
+			}
 		}
 	}
 	register(req: Request, res: Response, next: NextFunction): void {
@@ -61,14 +73,22 @@ export class UserController extends BaseController implements IUserController {
 			message: 'зарегистрируйтесь и перейдите к авторизации',
 		});
 	}
-	registration(req: Request, res: Response, next: NextFunction): void {
+	async registration(req: Request, res: Response, next: NextFunction): Promise<void> {
 		if (req.body.unvalidate) {
 			this.unvalidateRender(req, res, 'pages/register');
 		} else {
-			this.logger.log('[user controller] go to the login page');
-			res.render('pages/login', {
-				message: 'вы зарегистрировались, теперь авторизуйтесь',
-			});
+			const newUser = await this.userService.createUser(req.body);
+			if (!newUser) {
+				this.logger.warn('[user controller] don`t create user');
+				res.render('pages/register', {
+					message: 'Такой пользователь существует, попробуйте еще раз',
+				});
+			} else {
+				this.logger.log('[user controller] go to the login page');
+				res.render('pages/login', {
+					message: 'вы зарегистрировались, теперь авторизуйтесь',
+				});
+			}
 		}
 	}
 	info(req: Request, res: Response, next: NextFunction): void {

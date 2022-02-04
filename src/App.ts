@@ -11,6 +11,7 @@ import { IUserController } from './user/user.controller.interface';
 import { urlencoded } from 'body-parser';
 import fileUpload from 'express-fileupload';
 import { IReportController } from './report/report.controller.interface';
+import { PrismaService } from './database/prisma.service';
 
 @injectable()
 export class App {
@@ -24,6 +25,7 @@ export class App {
 		@inject(TYPES.IConfigService) private configService: IConfigService,
 		@inject(TYPES.IUserController) private userController: IUserController,
 		@inject(TYPES.IReportController) private reportController: IReportController,
+		@inject(TYPES.PrismaService) private prismaService: PrismaService,
 	) {
 		this.app = express();
 		this.port = configService.get('PORT');
@@ -57,11 +59,13 @@ export class App {
 		this.useStartPage();
 		this.useRotes();
 		this.useExceptionFilter();
+		await this.prismaService.connect();
 		this.server = this.app.listen(Number(this.port));
 		this.logger.log(`[application] Сервер запущен на http://localhost:${this.port}/start`);
 	}
 
-	public close(): void {
+	public async close(): Promise<void> {
+		await this.prismaService.disconnect();
 		this.server?.close();
 	}
 }

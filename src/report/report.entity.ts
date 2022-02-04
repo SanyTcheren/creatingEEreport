@@ -2,6 +2,7 @@ import { OilWell } from './oilwell';
 
 export class Report {
 	private _wells: OilWell[];
+	private _dataFile: string;
 
 	constructor(
 		private _type: string,
@@ -24,7 +25,16 @@ export class Report {
 	get bush(): string {
 		return this._bush;
 	}
+	get wells(): OilWell[] {
+		return this._wells;
+	}
+	get dataFile(): string {
+		return this._dataFile;
+	}
 	public addWell(well: OilWell): void {
 		this._wells.push(well);
+	}
+	public setDataFile(path: string): void {
+		this._dataFile = path;
 	}
 }
