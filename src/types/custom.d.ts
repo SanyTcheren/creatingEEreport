@@ -12,8 +12,3 @@ export interface WellPrepareDrill {
 	prepare: OilWell | null;
 	drill: OilWell | null;
 }
-
-export interface keysPrepare {
-	prepare: 0;
-	drill: 1;
-}

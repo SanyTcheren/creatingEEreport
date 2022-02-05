@@ -30,6 +30,7 @@ export class ReportBuilder {
 		maxWells: 4,
 		maxRow: 21,
 		firstRow: 10,
+		lastRow: 22,
 		stage: ['prepare', 'build'],
 		day: 'E F G H I J K L M N O P Q R S T U V W X Y Z AA AB AC AD AE AF AG AH AI'.split(' '),
 	};
@@ -175,56 +176,52 @@ export class ReportBuilder {
 					const End = wells[i][detail]?.end;
 					sheet.getCell(`D${this.ROWS.firstRow + keys[detail] + 3 * i}`).value = End;
 					const end: Moment = moment(End);
+					//потребленная мощность
+					const hours = this.getHoursOfWork(start, end);
+					for (let d = 0; d < hours.length; d++) {
+						//d - будет соответствовать (дню месяца - 1)
+						if (hours[d][0] == -1) continue; // Пропускаем нерабочие дни
+						//отрезаем нужный массив энергии и суммируем
+						const pow = power[d].slice(hours[d][0], hours[d][1] + 1).reduce((s, p) => s + p);
+						sheet.getCell(`${this.ROWS.day[d]}${this.ROWS.firstRow + keys[detail] + 3 * i}`).value =
+							Math.round(pow);
+					}
 				}
-
-				// const number = wells[i].well;
-				// sheet.getCell(`A${10 + 3 * i}`).value = number;
-				// 	//заполняем пзр и бурение одинаково, 0- пзр, 1 - бурение
-				// 	for (let k = 0; k < keys.stage.length; k++) {
-				// 		if (wells[i][keys.stage[k]]) {
-				// 			//начало работ
-				// 			let start = wells[i][keys.stage[k]].start
-				// 			sheet.getCell(`C${keys.firstRow + k + 3 * i}`).value = start;
-				// 			start = moment(start);
-				// 			//окончание работ
-				// 			let end = wells[i][keys.stage[k]].end;
-				// 			sheet.getCell(`D${keys.firstRow + k + 3 * i}`).value = /^3000.*/.test(end) ? 'переход' : end;
-				// 			end = moment(end);
-				// 			//потребленная мощность
-				// 			const hours = getHoursOfWork(start, end, month, year);
-				// 			for (let d = 0; d < hours.length; d++) { //d - будет соответствовать (дню месяца - 1)
-				// 				if (hours[d][0] == -1) continue;
-				// 				//отрезаем нужный массив энергии и суммируем
-				// 				let pow = power[d].slice(hours[d][0], hours[d][1] + 1).reduce((s, p) => s + p);
-				// 				sheet.getCell(`${keys.day[d]}${keys.firstRow + k + 3 * i}`).value = Math.round(pow);
-				// 			}
-				// 		}
 			}
-			//Запись математичиских формул
-			// for (let m = 0; m < keys.day.length; m++) {
-			// 	sheet.getCell(`${keys.day[m]}${keys.firstRow + 2 + 3 * i}`).value = {
-			// 		formula: `${keys.day[m]}${keys.firstRow + 3 * i}+${keys.day[m]}${keys.firstRow + 1 + 3 * i}`
-			// 	}
-			// }
-			// sheet.getCell(`AJ${keys.firstRow + i * 3}`).value = {
-			// 	formula: `SUM(E${keys.firstRow + i * 3}:AI${keys.firstRow + i * 3})`,
-			// }
-			// sheet.getCell(`AJ${keys.firstRow + 1 + i * 3}`).value = {
-			// 	formula: `SUM(E${keys.firstRow + 1 + i * 3}:AI${keys.firstRow + 1 + i * 3})`,
-			// }
-			// sheet.getCell(`AJ${keys.firstRow + 2 + i * 3}`).value = {
-			// 	formula: `AJ${keys.firstRow + i * 3}+AJ${keys.firstRow + 1 + i * 3}`,
-			// }
+		}
+		//Запись математичиских формул
+		sheet.getCell(`AJ22`).value = {
+			formula: `AJ12+AJ15+AJ18+AJ21`,
+		} as Excel.Cell;
+		for (let i = 0; i < this.ROWS.maxWells; i++) {
+			for (let m = 0; m < this.ROWS.day.length; m++) {
+				sheet.getCell(`${this.ROWS.day[m]}${this.ROWS.firstRow + 2 + 3 * i}`).value = {
+					formula: `${this.ROWS.day[m]}${this.ROWS.firstRow + 3 * i}+${this.ROWS.day[m]}${
+						this.ROWS.firstRow + 1 + 3 * i
+					}`,
+				} as Excel.Cell;
+			}
+			sheet.getCell(`AJ${this.ROWS.firstRow + i * 3}`).value = {
+				formula: `SUM(E${this.ROWS.firstRow + i * 3}:AI${this.ROWS.firstRow + i * 3})`,
+			} as Excel.Cell;
+			sheet.getCell(`AJ${this.ROWS.firstRow + 1 + i * 3}`).value = {
+				formula: `SUM(E${this.ROWS.firstRow + 1 + i * 3}:AI${this.ROWS.firstRow + 1 + i * 3})`,
+			} as Excel.Cell;
+			sheet.getCell(`AJ${this.ROWS.firstRow + 2 + i * 3}`).value = {
+				formula: `AJ${this.ROWS.firstRow + i * 3}+AJ${this.ROWS.firstRow + 1 + i * 3}`,
+			} as Excel.Cell;
 
-			// sheet.getCell(`AK${keys.firstRow + i * 3}`).value = {
-			// 	formula: `AJ${keys.firstRow + i * 3}/AJ${lastRow}*AL${lastRow}`,
-			// }
-			// sheet.getCell(`AK${keys.firstRow + 1 + i * 3}`).value = {
-			// 	formula: `AJ${keys.firstRow + 1 + i * 3}/AJ${lastRow}*AL${lastRow}`,
-			// }
-			// sheet.getCell(`AK${keys.firstRow + 2 + i * 3}`).value = {
-			// 	formula: `AK${keys.firstRow + i * 3}+AK${keys.firstRow + 1 + i * 3}`,
-			// }
+			sheet.getCell(`AK${this.ROWS.firstRow + i * 3}`).value = {
+				formula: `AJ${this.ROWS.firstRow + i * 3}/AJ${this.ROWS.lastRow}*AL${this.ROWS.lastRow}`,
+			} as Excel.Cell;
+			sheet.getCell(`AK${this.ROWS.firstRow + 1 + i * 3}`).value = {
+				formula: `AJ${this.ROWS.firstRow + 1 + i * 3}/AJ${this.ROWS.lastRow}*AL${
+					this.ROWS.lastRow
+				}`,
+			} as Excel.Cell;
+			sheet.getCell(`AK${this.ROWS.firstRow + 2 + i * 3}`).value = {
+				formula: `AK${this.ROWS.firstRow + i * 3}+AK${this.ROWS.firstRow + 1 + i * 3}`,
+			} as Excel.Cell;
 		}
 	};
 }
