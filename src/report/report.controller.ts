@@ -5,8 +5,6 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
 import { UploadedFile } from 'express-fileupload';
-import path from 'path';
-import fs from 'fs';
 import { IReportController } from './report.controller.interface';
 import { ReportGeneralDto } from './dto/report-general.dto';
 import { ValidateMiddleware } from '../common/validate.middleware';
@@ -16,8 +14,8 @@ import { IConfigService } from '../config/config.service.interface';
 import { IReportService } from './report.service.interface';
 import { ReportOilWellDto } from './dto/report-oilwell.dto';
 import { ReportInputDto } from './dto/report-input.dto';
-import { IFileService } from '../common/file.service.interface';
 import { ReportSaveDto } from './dto/report-save.dto';
+import moment from 'moment';
 
 @injectable()
 export class ReportController extends BaseController implements IReportController {
@@ -96,10 +94,12 @@ export class ReportController extends BaseController implements IReportControlle
 		} else {
 			await this.reportService.addOilWell(body);
 			this.logger.log('[report controller] add well');
+			const start = moment(body.start).format('DD.MM.YYYY HH:mm');
+			const end = moment(body.end).format('DD.MM.YYYY HH:mm');
 			res.render('pages/oilwell', {
-				message: `скважина ${body.well} ${body.detail == 'drill' ? 'бурение' : 'пзр'} начало: ${
-					body.start
-				} окончание: ${body.end}`,
+				message: `скважина ${body.well} ${
+					body.detail == 'drill' ? 'бурение' : 'пзр'
+				} начало: ${start},	 окончание: ${end}`,
 				jwt: body.jwt,
 				email: body.email,
 			});

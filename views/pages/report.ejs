@@ -11,16 +11,35 @@
 
 		<div class="container">
 			<%- include ('../partials/message') %>
-				<section id="content">
-					<form action="/report/save" method="post">
-						<h1>Отчет</h1>
-						<input type="hidden" value="<%=jwt%>" name="jwt">
-						<input type="hidden" value="<%=email%>" name="email">
-						<div>
-							<input type="submit" value="Сохранить" class="button-primary" />
-						</div>
-					</form>
-				</section>
+				<div class="row">
+					<div class="col-sm-12 col-md-6 col-lg-6">
+						<section id="content">
+							<form action="/report/save" method="post">
+								<h1>Отчет</h1>
+								<input type="hidden" value="<%=jwt%>" name="jwt">
+								<input type="hidden" value="<%=email%>" name="email">
+								<div>
+									<input type="submit" value="Сохранить" class="button-primary" />
+								</div>
+							</form>
+						</section>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<pclass="alert alert-info">
+							При расчете потребленной электрической энергии учитывается только активная мощность (колонка
+							А+ в профиле мощности). <br>Используется коэффициент трансформации равный 7200. <br>Для
+							проверки отчета можете
+							снять со счетчика СЭТ-4М отчет по электрической энергии за отчетный месяц и сравнить
+							потребленную активную электрическую энергию с итоговым значением в ячейке
+							<strong>AJ22</strong> нашего отчета. В случае несовпадения значений проверьте отсутствие в
+							отчете <em>дней без потребления электрической энергии</em>, их наличие означает неправильный
+							ввод данных по скважинам. <br>Ещё одной причиной неправильного отчета может быть
+							некорректный
+							профиль мощности с <em>получсовой дискретизацией данных</em>, либо начинающийся не с 1 числа
+							отчетного месяца.
+							</p>
+					</div>
+				</div>
 		</div>
 
 	</main>

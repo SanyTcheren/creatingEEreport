@@ -11,24 +11,29 @@
 
 		<div class="container">
 			<%- include ('../partials/message') %>
-				<section id="content">
-					<form action="/user/register" method="post">
-						<h1>Регистрация</h1>
-						<div>
-							<input name="name" type="text" placeholder="Name" required="" id="userename" />
-						</div>
-						<div>
-							<input name="email" type="text" placeholder="Email" required="" id="useremail" />
-						</div>
-						<div>
-							<input name="password" type="password" placeholder="Password" required="" id="password" />
-						</div>
-						<div>
-							<input type="submit" value="Регистрация" class="button-primary" />
-						</div>
-					</form>
+				<div class="row">
+					<div class="col-sm-12 col-md-8 col-lg-6">
+						<section id="content">
+							<form action="/user/register" method="post">
+								<h1>Регистрация</h1>
+								<div>
+									<input name="name" type="text" placeholder="Name" required="" id="userename" />
+								</div>
+								<div>
+									<input name="email" type="text" placeholder="Email" required="" id="useremail" />
+								</div>
+								<div>
+									<input name="password" type="password" placeholder="Password" required=""
+										id="password" />
+								</div>
+								<div>
+									<input type="submit" value="Регистрация" class="button-primary" />
+								</div>
+							</form>
 
-				</section>
+						</section>
+					</div>
+				</div>
 
 		</div>
 

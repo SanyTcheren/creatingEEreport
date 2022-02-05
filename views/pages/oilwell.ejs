@@ -11,33 +11,53 @@
 
 		<div class="container">
 			<%- include ('../partials/message') %>
-				<section id="content">
-					<form action="/report/addwell" method="post">
-						<h1>Скважины</h1>
-						<input type="hidden" value="<%=jwt%>" name="jwt">
-						<input type="hidden" value="<%=email%>" name="email">
-						<div>
-							<input type="text" placeholder="скважина" required name="well" />
-							<select required size="1" name="detail" class="select-css">
-								<option value="drill">бурение</option>
-								<option value="prepare">пзр</option>
-							</select>
-						</div>
-						<div>
-							<input type="datetime-local" required name="start" />
-							<input type="datetime-local" required name="end" />
-						</div>
-						<div>
-							<input type="submit" value="Добавить" class="button-primary" />
-						</div>
-					</form>
-					<form action="/report/oilwell" method="post">
-						<input type="hidden" value="<%=jwt%>" name="jwt">
-						<input type="hidden" value="<%=email%>" name="email">
-						<input type="submit" value="Далее" class="button-primary" />
-					</form>
-				</section>
-
+				<div class="row">
+					<div class="col-sm-12 col-md-6 col-lg-6">
+						<section id="content">
+							<form action="/report/addwell" method="post">
+								<h1>Скважины</h1>
+								<input type="hidden" value="<%=jwt%>" name="jwt">
+								<input type="hidden" value="<%=email%>" name="email">
+								<div>
+									<input type="text" placeholder="скважина" required name="well" />
+									<select required size="1" name="detail" class="select-css">
+										<option value="drill">бурение</option>
+										<option value="prepare">пзр</option>
+									</select>
+								</div>
+								<div>
+									<input type="datetime-local" required name="start" />
+									<input type="datetime-local" required name="end" />
+								</div>
+								<div>
+									<input type="submit" value="Добавить" class="button-primary" />
+								</div>
+							</form>
+							<form action="/report/oilwell" method="post">
+								<input type="hidden" value="<%=jwt%>" name="jwt">
+								<input type="hidden" value="<%=email%>" name="email">
+								<input type="submit" value="Далее" class="button-primary" />
+							</form>
+						</section>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<p class="alert alert-danger">
+							Будьте внимательны при заполнении данных по скважинам! Если ошибетесь жмите кнопку RESTART
+							внизу страницы. Обращайте внимние на следующее:</p>
+						<blockquote>
+							<p class="alert alert-danger"><em> - правильно выбирайте вид работ<br> - время начало работ
+									следующей скважины должно совпадать
+									с
+									временем окончанию работ
+									предыдущей<br> - если работы еще не закончены выберете любую дату из
+									будущего</em></p>
+						</blockquote>
+						<p class="alert alert-danger">
+							Вверху страницы отображаются добавленные данные. Как будете готовы переходите к следующей
+							странице.
+						</p>
+					</div>
+				</div>
 		</div>
 
 	</main>

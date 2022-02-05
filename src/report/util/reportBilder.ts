@@ -169,13 +169,13 @@ export class ReportBuilder {
 					//Номер скважины
 					sheet.getCell(`A${10 + 3 * i}`).value = wells[i][detail]?.well;
 					//начало работ
-					const St = wells[i][detail]?.start;
-					sheet.getCell(`C${this.ROWS.firstRow + keys[detail] + 3 * i}`).value = St;
-					const start: Moment = moment(St);
+					const start: Moment = moment(wells[i][detail]?.start);
+					sheet.getCell(`C${this.ROWS.firstRow + keys[detail] + 3 * i}`).value =
+						start.format('DD.MM.YYYY HH:mm');
 					//окончание работ
-					const End = wells[i][detail]?.end;
-					sheet.getCell(`D${this.ROWS.firstRow + keys[detail] + 3 * i}`).value = End;
-					const end: Moment = moment(End);
+					const end: Moment = moment(wells[i][detail]?.end);
+					sheet.getCell(`D${this.ROWS.firstRow + keys[detail] + 3 * i}`).value =
+						end.format('DD.MM.YYYY HH:mm');
 					//потребленная мощность
 					const hours = this.getHoursOfWork(start, end);
 					for (let d = 0; d < hours.length; d++) {

@@ -19,7 +19,7 @@ export class ReportRepository implements IReportRepository {
 					},
 				},
 			});
-			return this.prismaService.client.reportModel.update({
+			return await this.prismaService.client.reportModel.update({
 				data: {
 					email,
 					type,
@@ -32,7 +32,7 @@ export class ReportRepository implements IReportRepository {
 				},
 			});
 		} else {
-			return this.prismaService.client.reportModel.create({
+			return await this.prismaService.client.reportModel.create({
 				data: {
 					email,
 					type,
@@ -45,7 +45,7 @@ export class ReportRepository implements IReportRepository {
 	}
 
 	async find(email: string): Promise<ReportModel | null> {
-		return this.prismaService.client.reportModel.findFirst({
+		return await this.prismaService.client.reportModel.findFirst({
 			where: {
 				email,
 			},
@@ -90,7 +90,7 @@ export class ReportRepository implements IReportRepository {
 	}
 
 	async getOilWell(email: string): Promise<OilWellModel[]> {
-		return this.prismaService.client.oilWellModel.findMany({
+		return await this.prismaService.client.oilWellModel.findMany({
 			where: {
 				report: {
 					email,

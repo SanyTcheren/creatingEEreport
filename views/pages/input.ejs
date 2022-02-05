@@ -11,20 +11,31 @@
 
 		<div class="container">
 			<%- include ('../partials/message') %>
-				<section id="content">
-					<form action="/report/input" method='post' encType="multipart/form-data">
-						<h1>Профиль мощности</h1>
-						<input type="hidden" value="<%=jwt%>" name="jwt">
-						<input type="hidden" value="<%=email%>" name="email">
-						<div class=" form-control">
-							<input type="file" name="dataFile" required>
-						</div>
-						<div>
-							<input type="submit" value="Загрузить" class="button-primary" />
-						</div>
-					</form>
-				</section>
-
+				<div class="row">
+					<div class="col-sm-12 col-md-6 col-lg-6">
+						<section id="content">
+							<form action="/report/input" method='post' encType="multipart/form-data">
+								<h1>Профиль мощности</h1>
+								<input type="hidden" value="<%=jwt%>" name="jwt">
+								<input type="hidden" value="<%=email%>" name="email">
+								<div class=" form-control">
+									<input type="file" name="dataFile" required>
+								</div>
+								<div>
+									<input type="submit" value="Загрузить" class="button-primary" />
+								</div>
+							</form>
+						</section>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<pclass="alert alert-info">Снимите со счетчика электрической энергии СЭТ-4М профиль мощности за
+							отчетный месяц
+							<strong>с часовой дискретизацией данных</strong>, сохраните в текстовом формате и
+							загрузите на сервер. Отчет обязательно должен начинаться с <strong>1 числа месяца</strong>
+							00 часов 00 минут.
+							</p>
+					</div>
+				</div>
 		</div>
 
 	</main>

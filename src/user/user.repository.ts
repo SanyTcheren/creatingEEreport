@@ -9,8 +9,11 @@ import { IUserRepository } from './user.repository.interace';
 export class UserRepository implements IUserRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create({ name, email, password }: User): Promise<UserModel> {
-		return this.prismaService.client.userModel.create({
+	async create({ name, email, password }: User): Promise<UserModel | null> {
+		if (await this.find(email)) {
+			return null;
+		}
+		return await this.prismaService.client.userModel.create({
 			data: {
 				email,
 				name,
@@ -20,7 +23,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async find(email: string): Promise<UserModel | null> {
-		return this.prismaService.client.userModel.findFirst({
+		return await this.prismaService.client.userModel.findFirst({
 			where: {
 				email,
 			},

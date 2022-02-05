@@ -29,6 +29,6 @@ export class UserService implements IUserService {
 		const newUser = new User(dto.name, dto.email);
 		const salt = this.configeService.get('SALT');
 		await newUser.setPassword(dto.password, salt);
-		return this.userRepository.create(newUser);
+		return await this.userRepository.create(newUser);
 	}
 }

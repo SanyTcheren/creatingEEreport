@@ -11,29 +11,32 @@
 
 		<div class="container">
 			<%- include ('../partials/message') %>
-				<section id="content">
-					<form action="/report/general" method="post">
-						<h1>Общие данные</h1>
-						<input type="hidden" value="<%=jwt%>" name="jwt">
-						<input type="hidden" value="<%=email%>" name="email">
-						<div>
-							<input type="text" placeholder="тип буровой установки" required name="type" />
-						</div>
-						<div>
-							<input type="text" placeholder="номер буровой установки" required name="number" />
-						</div>
-						<div>
-							<input type="text" placeholder="месторождение" required name="field" />
-						</div>
-						<div>
-							<input type="text" placeholder="куст" required name="bush" />
-						</div>
-						<div>
-							<input type="submit" value="Продолжить" class="button-primary" />
-						</div>
-					</form>
-
-				</section>
+				<div class="row">
+					<div class="col-sm-12 col-md-8 col-lg-6">
+						<section id="content">
+							<form action="/report/general" method="post">
+								<h1>Общие данные</h1>
+								<input type="hidden" value="<%=jwt%>" name="jwt">
+								<input type="hidden" value="<%=email%>" name="email">
+								<div>
+									<input type="text" placeholder="тип буровой установки" required name="type" />
+								</div>
+								<div>
+									<input type="text" placeholder="номер буровой установки" required name="number" />
+								</div>
+								<div>
+									<input type="text" placeholder="месторождение" required name="field" />
+								</div>
+								<div>
+									<input type="text" placeholder="куст" required name="bush" />
+								</div>
+								<div>
+									<input type="submit" value="Продолжить" class="button-primary" />
+								</div>
+							</form>
+						</section>
+					</div>
+				</div>
 		</div>
 
 	</main>
