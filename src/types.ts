@@ -11,4 +11,5 @@ export const TYPES = {
 	AuthMiddleWare: Symbol.for('AuthMiddleware'),
 	IReportRepository: Symbol.for('IReportRepository'),
 	IReportService: Symbol.for('IReportService'),
+	IFileService: Symbol.for('IFileService'),
 };

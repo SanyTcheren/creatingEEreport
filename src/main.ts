@@ -21,6 +21,8 @@ import { IUserService } from './user/user.service.interface';
 import { IReportRepository } from './report/report.repository.interface';
 import { IReportService } from './report/report.service.interface';
 import { ReportService } from './report/report.service';
+import { IFileService } from './common/file.service.interface';
+import { FileService } from './common/file.service';
 
 interface IBootstrapReturn {
 	appContainer: Container;
@@ -40,6 +42,7 @@ const appBinding = new ContainerModule((bind: interfaces.Bind) => {
 	bind<AuthMiddleWare>(TYPES.AuthMiddleWare).to(AuthMiddleWare);
 	bind<IReportRepository>(TYPES.IReportRepository).to(ReportRepository);
 	bind<IReportService>(TYPES.IReportService).to(ReportService);
+	bind<IFileService>(TYPES.IFileService).to(FileService);
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {

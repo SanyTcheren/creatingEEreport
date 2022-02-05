@@ -16,6 +16,7 @@ import { IConfigService } from '../config/config.service.interface';
 import { IReportService } from './report.service.interface';
 import { ReportOilWellDto } from './dto/report-oilwell.dto';
 import { ReportInputDto } from './dto/report-input.dto';
+import { IFileService } from '../common/file.service.interface';
 
 @injectable()
 export class ReportController extends BaseController implements IReportController {
@@ -24,6 +25,7 @@ export class ReportController extends BaseController implements IReportControlle
 		@inject(TYPES.IConfigService) private configeService: IConfigService,
 		@inject(TYPES.AuthMiddleWare) private authMiddleWare: AuthMiddleWare,
 		@inject(TYPES.IReportService) private reportService: IReportService,
+		@inject(TYPES.IFileService) private fileService: IFileService,
 	) {
 		super(logger);
 		this.bindRotes([
@@ -117,39 +119,12 @@ export class ReportController extends BaseController implements IReportControlle
 			});
 		} else {
 			const dataFile = req.files.dataFile as UploadedFile;
-			fs.mkdir(
-				path.join(__dirname, `../../public/files/${req.body.email.split('@')[0]}`),
-				(err) => {
-					if (err) {
-						this.logger.error(
-							'[report controller] Не удалось создать директорию для хранения файлов',
-						);
-					} else {
-						this.logger.log('[report controller] создана директория для хранения файлов');
-					}
-				},
-			);
-			const uploadPath = path.join(
-				__dirname,
-				`../../public/files/${req.body.email.split('@')[0]}`,
-				dataFile.name,
-			);
+			const uploadPath = await this.fileService.uploadFile(dataFile, req.body.email);
 			await this.reportService.setDataFile(uploadPath, req.body.email);
-			dataFile.mv(uploadPath, (err) => {
-				if (err) {
-					this.logger.warn('[report controller] input don`t upload data-file');
-					res.render('pages/input', {
-						message: '!! файл с данными не загрузился !!',
-						jwt: req.body.jwt,
-						email: req.body.email,
-					});
-				} else {
-					res.render('pages/report', {
-						message: 'сохраните отчет',
-						jwt: req.body.jwt,
-						email: req.body.email,
-					});
-				}
+			res.render('pages/report', {
+				message: 'сохраните отчет',
+				jwt: req.body.jwt,
+				email: req.body.email,
 			});
 		}
 	}
