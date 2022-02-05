@@ -12,4 +12,5 @@ export const TYPES = {
 	IReportRepository: Symbol.for('IReportRepository'),
 	IReportService: Symbol.for('IReportService'),
 	IFileService: Symbol.for('IFileService'),
+	ReportBuilder: Symbol.for('ReportBuilder'),
 };

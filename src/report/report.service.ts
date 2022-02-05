@@ -9,12 +9,14 @@ import { OilWell } from './oilwell';
 import { Report } from './report.entity';
 import { IReportRepository } from './report.repository.interface';
 import { IReportService } from './report.service.interface';
+import { ReportBuilder } from './util/reportBilder';
 
 @injectable()
 export class ReportService implements IReportService {
 	constructor(
 		@inject(TYPES.IReportRepository) private userRepository: IReportRepository,
 		@inject(TYPES.IFileService) private fileService: IFileService,
+		@inject(TYPES.ReportBuilder) private reportBuilder: ReportBuilder,
 	) {}
 
 	async createReport(dto: ReportGeneralDto): Promise<ReportModel> {
@@ -38,7 +40,14 @@ export class ReportService implements IReportService {
 		return await this.userRepository.setFile(uploadPath, email);
 	}
 
-	async getReport(email: string): Promise<string> {
-		return this.fileService.getReport(email);
+	async getReport(emailGet: string): Promise<string> {
+		const { email, type, number, field, bush, dataFile } = await this.userRepository.getReport(
+			emailGet,
+		);
+		const oilWells = await this.userRepository.getOilWell(email);
+		const report = new Report(email, type, number, field, bush);
+		report.setDataFile(dataFile as string);
+		report.addWells(oilWells);
+		return await this.reportBuilder.build(report);
 	}
 }

@@ -23,6 +23,7 @@ import { IReportService } from './report/report.service.interface';
 import { ReportService } from './report/report.service';
 import { IFileService } from './common/file.service.interface';
 import { FileService } from './common/file.service';
+import { ReportBuilder } from './report/util/reportBilder';
 
 interface IBootstrapReturn {
 	appContainer: Container;
@@ -43,6 +44,7 @@ const appBinding = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IReportRepository>(TYPES.IReportRepository).to(ReportRepository);
 	bind<IReportService>(TYPES.IReportService).to(ReportService);
 	bind<IFileService>(TYPES.IFileService).to(FileService);
+	bind<ReportBuilder>(TYPES.ReportBuilder).to(ReportBuilder);
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {

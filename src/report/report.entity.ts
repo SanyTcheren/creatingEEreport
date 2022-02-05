@@ -1,3 +1,5 @@
+import { OilWellModel } from '@prisma/client';
+import { Detail } from '../types/custom';
 import { OilWell } from './oilwell';
 
 export class Report {
@@ -34,6 +36,12 @@ export class Report {
 	}
 	get dataFile(): string {
 		return this._dataFile;
+	}
+	public addWells(wellModels: OilWellModel[]): void {
+		for (const { well, detail, start, end } of wellModels) {
+			const oilWell = new OilWell(well, detail as Detail, start, end);
+			this._wells.push(oilWell);
+		}
 	}
 	public addWell(well: OilWell): void {
 		this._wells.push(well);

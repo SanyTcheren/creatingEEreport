@@ -1,5 +1,6 @@
 import { stat, readFile } from 'fs/promises';
 import inconv from 'iconv-lite';
+import { PowerYearMonth } from '../../types/custom';
 
 const kPower = 7200; //Коэффициент трансформации
 
@@ -11,7 +12,7 @@ const isExist = async (path: string): Promise<void> => {
 	}
 };
 
-const readPower = async (file: string): Promise<Number[][]> => {
+const readPower = async (file: string): Promise<PowerYearMonth> => {
 	//Создаем массив
 	const power = [];
 	for (let i = 0; i < 31; i++) {
@@ -32,10 +33,12 @@ const readPower = async (file: string): Promise<Number[][]> => {
 			power[i][k] = +p.replace(',', '.') * kPower;
 		}
 	}
-	return power;
+	const date: string[] = dataArr[dataArr.length - 2].split('\t')[0].split('.');
+	return { power, year: +date[2], month: +date[1] };
 };
 //Возвращаем двумерный массив 31*24 значения - мощность за час
-const getPower = async (file: string): Promise<Number[][]> => {
+//Дополнительно возвращаем месяц и год
+const getPower = async (file: string): Promise<PowerYearMonth> => {
 	await isExist(file);
 	const power = await readPower(file);
 	return power;

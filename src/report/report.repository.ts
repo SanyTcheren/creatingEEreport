@@ -79,4 +79,23 @@ export class ReportRepository implements IReportRepository {
 			},
 		});
 	}
+
+	async getReport(email: string): Promise<ReportModel> {
+		const report = await this.prismaService.client.reportModel.findFirst({
+			where: {
+				email,
+			},
+		});
+		return report as ReportModel;
+	}
+
+	async getOilWell(email: string): Promise<OilWellModel[]> {
+		return this.prismaService.client.oilWellModel.findMany({
+			where: {
+				report: {
+					email,
+				},
+			},
+		});
+	}
 }

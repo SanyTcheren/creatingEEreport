@@ -38,4 +38,8 @@ export class FileService implements IFileService {
 		}
 		return dirPath;
 	}
+
+	getTemplate(): string {
+		return path.join(this._root, '/template/template.xlsx');
+	}
 }
