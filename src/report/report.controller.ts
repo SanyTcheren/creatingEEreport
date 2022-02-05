@@ -17,6 +17,7 @@ import { IReportService } from './report.service.interface';
 import { ReportOilWellDto } from './dto/report-oilwell.dto';
 import { ReportInputDto } from './dto/report-input.dto';
 import { IFileService } from '../common/file.service.interface';
+import { ReportSaveDto } from './dto/report-save.dto';
 
 @injectable()
 export class ReportController extends BaseController implements IReportController {
@@ -25,7 +26,6 @@ export class ReportController extends BaseController implements IReportControlle
 		@inject(TYPES.IConfigService) private configeService: IConfigService,
 		@inject(TYPES.AuthMiddleWare) private authMiddleWare: AuthMiddleWare,
 		@inject(TYPES.IReportService) private reportService: IReportService,
-		@inject(TYPES.IFileService) private fileService: IFileService,
 	) {
 		super(logger);
 		this.bindRotes([
@@ -119,8 +119,7 @@ export class ReportController extends BaseController implements IReportControlle
 			});
 		} else {
 			const dataFile = req.files.dataFile as UploadedFile;
-			const uploadPath = await this.fileService.uploadFile(dataFile, req.body.email);
-			await this.reportService.setDataFile(uploadPath, req.body.email);
+			await this.reportService.setDataFile(dataFile, req.body.email);
 			res.render('pages/report', {
 				message: 'сохраните отчет',
 				jwt: req.body.jwt,
@@ -129,12 +128,13 @@ export class ReportController extends BaseController implements IReportControlle
 		}
 	}
 
-	save(req: Request, res: Response, next: NextFunction): void {
-		const file = path.join(
-			__dirname,
-			`../../public/files/${req.body.email.split('@')[0]}/report.xlsx`,
-		);
-		res.download(file);
+	async save(
+		{ body }: Request<{}, {}, ReportSaveDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const reportFile = await this.reportService.getReport(body.email);
+		res.download(reportFile);
 		this.logger.log('[report controller] save report');
 	}
 }

@@ -13,6 +13,11 @@ export class FileService implements IFileService {
 	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
 		this._root = path.join(__dirname, `../../public/files/`);
 	}
+	async getReport(email: string): Promise<string> {
+		const reportPath = path.join(await this.getOutDir(email), 'report.xlsx');
+		return reportPath;
+	}
+
 	async uploadFile(file: UploadedFile, email: string): Promise<string> {
 		const filePath = path.join(await this.getOutDir(email), file.name);
 		file.mv(filePath, (err) => {
