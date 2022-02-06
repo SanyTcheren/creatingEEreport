@@ -68,9 +68,9 @@ export class ReportController extends BaseController implements IReportControlle
 			this.unvalidateRender(body, res, 'pages/general');
 		} else {
 			await this.reportService.createReport(body);
-			this.logger.log('[report controller] go to the oil well page');
-			res.render('pages/oilwell', {
-				message: 'введите данные по скважинам',
+			this.logger.log('[report controller] go to the input page');
+			res.render('pages/input', {
+				message: 'выберите и загрузите файл с профилем мощности',
 				jwt: body.jwt,
 				email: body.email,
 			});
@@ -78,8 +78,8 @@ export class ReportController extends BaseController implements IReportControlle
 	}
 	oilwell({ body }: Request<{}, {}, ReportOilWellDto>, res: Response, next: NextFunction): void {
 		this.logger.log('[report controller] go to the input page');
-		res.render('pages/input', {
-			message: 'выберите и загрузите файл с профилем мощности',
+		res.render('pages/report', {
+			message: 'сохраните отчет',
 			jwt: body.jwt,
 			email: body.email,
 		});
@@ -124,8 +124,9 @@ export class ReportController extends BaseController implements IReportControlle
 		} else {
 			const dataFile = req.files.dataFile as UploadedFile;
 			await this.reportService.setDataFile(dataFile, req.body.email);
-			res.render('pages/report', {
-				message: 'сохраните отчет',
+			this.logger.log('[report controller] go to the oil well page');
+			res.render('pages/oilwell', {
+				message: 'введите данные по скважинам',
 				jwt: req.body.jwt,
 				email: req.body.email,
 			});
