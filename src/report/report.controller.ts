@@ -94,12 +94,16 @@ export class ReportController extends BaseController implements IReportControlle
 		} else {
 			await this.reportService.addOilWell(body);
 			this.logger.log('[report controller] add well');
-			const start = moment(body.start).format('DD.MM.YYYY HH:mm');
-			const end = moment(body.end).format('DD.MM.YYYY HH:mm');
+			const start = moment(body.start);
+			start.minutes(0);
+			const end = moment(body.end);
+			end.minutes(0);
 			res.render('pages/oilwell', {
 				message: `скважина ${body.well} ${
 					body.detail == 'drill' ? 'бурение' : 'пзр'
-				} начало: ${start},	 окончание: ${end}`,
+				} начало: ${start.format('DD.MM.YYYY HH:mm')},	 окончание: ${end.format(
+					'DD.MM.YYYY HH:mm',
+				)}`,
 				jwt: body.jwt,
 				email: body.email,
 			});

@@ -5,6 +5,7 @@
   "main": "main.js",
   "type": "commonjs",
   "scripts": {
+    "clear": "rm -r ./public/files",
     "start": "node ./dist/src/main.js",
     "build": "tsc | cp -r ./public ./dist",
     "test": "jest",

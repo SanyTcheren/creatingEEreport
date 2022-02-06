@@ -63,6 +63,7 @@ export class UserController extends BaseController implements IUserController {
 			this.unvalidateRender(body, res, 'pages/login');
 		} else {
 			if (await this.userService.validateUser(body)) {
+				await this.userService.clearUser(body.email);
 				const jwt = await this.signJWT(body.email, this.configeService.get('SECRET'));
 				this.logger.log('[user controller] user login, go to the general page');
 				res.render('pages/general', {

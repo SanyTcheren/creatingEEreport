@@ -9,6 +9,16 @@ import { IUserRepository } from './user.repository.interace';
 export class UserRepository implements IUserRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
+	async clear(email: string): Promise<void> {
+		await this.prismaService.client.oilWellModel.deleteMany({
+			where: {
+				report: {
+					email,
+				},
+			},
+		});
+	}
+
 	async create({ name, email, password }: User): Promise<UserModel | null> {
 		if (await this.find(email)) {
 			return null;

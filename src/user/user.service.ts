@@ -14,6 +14,9 @@ export class UserService implements IUserService {
 		@inject(TYPES.IConfigService) private configeService: IConfigService,
 		@inject(TYPES.IUserRepository) private userRepository: IUserRepository,
 	) {}
+	async clearUser(email: string): Promise<void> {
+		return await this.userRepository.clear(email);
+	}
 
 	async validateUser(dto: UserLoginDto): Promise<boolean> {
 		const extendUser = await this.userRepository.find(dto.email);

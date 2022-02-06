@@ -184,7 +184,8 @@ export class ReportBuilder {
 						//отрезаем нужный массив энергии и суммируем
 						const pow = power[d].slice(hours[d][0], hours[d][1] + 1).reduce((s, p) => s + p);
 						sheet.getCell(`${this.ROWS.day[d]}${this.ROWS.firstRow + keys[detail] + 3 * i}`).value =
-							Math.round(pow);
+							// Math.round(pow);
+							pow;
 					}
 				}
 			}

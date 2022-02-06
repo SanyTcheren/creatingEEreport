@@ -11,8 +11,13 @@ export class OilWell {
 		start: string,
 		end: string,
 	) {
-		this._start = moment(start);
-		this._end = moment(end);
+		const Start = moment(start);
+		const End = moment(end);
+		Start.minutes(0);
+		End.minutes(0);
+
+		this._start = Start;
+		this._end = End;
 	}
 	get well(): string {
 		return this._well;

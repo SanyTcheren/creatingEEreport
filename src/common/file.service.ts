@@ -34,12 +34,12 @@ export class FileService implements IFileService {
 			await stat(dirPath);
 		} catch (error) {
 			this.logger.log('[file service] создана директория для хранения файлов');
-			await mkdir(dirPath);
+			await mkdir(dirPath, { recursive: true });
 		}
 		return dirPath;
 	}
 
 	getTemplate(): string {
-		return path.join(this._root, '/template/template.xlsx');
+		return path.join(this._root, '../template/template.xlsx');
 	}
 }
