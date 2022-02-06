@@ -8,6 +8,7 @@ import { OilWell } from '../oilwell';
 import moment, { Moment } from 'moment';
 import { getPower } from './readPowerProfile';
 import { ReportBuild, WellPrepareDrill } from '../../types/custom';
+import { check } from 'prettier';
 
 @injectable()
 export class ReportBuilder {
@@ -66,7 +67,11 @@ export class ReportBuilder {
 			const workbook = new Excel.Workbook();
 			await workbook.xlsx.readFile(this.templatePath);
 			const sheet = workbook.getWorksheet(1);
-
+			//проверяем правильность данных по скважинам
+			const errorMessage: string | void = this.checkWell();
+			if (errorMessage) {
+				return { errorMessage };
+			}
 			//получаем данные для отчета
 			const wells = await this.getWellPrepareDrill();
 			const { power, year, month } = await getPower(powerPath);
@@ -84,6 +89,80 @@ export class ReportBuilder {
 			this.logger.error('[report builder] `Не удалось создать отчет.');
 		}
 		return { resultPath, errorMessage: 'Ok' };
+	}
+
+	checkWell(): string | void {
+		const month = Number(this.month - 1);
+		const year = Number(this.year);
+		const firstDay = moment({
+			year: year,
+			month: month,
+			day: 1,
+			hours: 0,
+			minutes: 0,
+			seconds: 0,
+		});
+		const lastDay = moment({
+			day: 1,
+			hours: 0,
+			minutes: 0,
+			seconds: 0,
+		});
+		if (month < 11) {
+			lastDay.year(year);
+			lastDay.month(month + 1);
+		} else {
+			lastDay.year(year + 1);
+			lastDay.month(0);
+		}
+		const wells = this.report.wells;
+		if (wells.length == 0) {
+			return 'Отсутствуют данные по скважины!';
+		}
+		const sortedWells: OilWell[] = Object.values(wells).sort((a, b) => {
+			const aStart = moment(a.start);
+			const bStart = moment(b.start);
+			return aStart.isAfter(bStart) ? 1 : -1;
+		});
+		if (firstDay.isBefore(moment(sortedWells[0].start))) {
+			return `Отсутсвуют данные о бурении в начале месяца (до ${moment(
+				sortedWells[0].start,
+			).day()} числа месяца ${this.MONTH[month]})!`;
+		}
+		if (lastDay.isAfter(moment(sortedWells[sortedWells.length - 1].end))) {
+			return `Отсутсвуют данные о бурении в конце месяца (c ${moment(
+				sortedWells[sortedWells.length - 1].end,
+			).day()} числа месяца ${this.MONTH[month]})!`;
+		}
+		for (let i = 0; i < wells.length; i++) {
+			if (i != 0 && wells[i].detail == 'drill') {
+				if (wells[i - 1].detail != 'prepare') {
+					return `Отсутствует ПЗР к бурению скважины ${wells[i].well}!`;
+				}
+				if (wells[i].well != wells[i - 1].well) {
+					return `Пзр к бурению скважины ${wells[i].well} выполняется для скважины ${
+						wells[i - 1].well
+					}!`;
+				}
+			}
+			if (i != wells.length - 1) {
+				const endBefore = moment(wells[i].end);
+				const wellDetail1 = wells[i].detail == 'drill' ? 'бурение' : 'пзр';
+				const wellDetail2 = wells[i + 1].detail == 'drill' ? 'бурение' : 'пзр';
+				const startAfter = moment(wells[i + 1].start);
+				if (endBefore.isBefore(startAfter)) {
+					return `Между работами: ${wellDetail1} скважины ${
+						wells[i].well
+					} и ${wellDetail2} скважины ${wells[i + 1].well}, есть неиспользуемое время!`;
+				}
+				if (endBefore.isAfter(startAfter)) {
+					return `Между работами: ${wellDetail1} скважины ${
+						wells[i].well
+					} и ${wellDetail2} скважины ${wells[i + 1].well}, есть совместно используемое время!`;
+				}
+			}
+		}
+		return;
 	}
 
 	async getWellPrepareDrill(): Promise<WellPrepareDrill[]> {

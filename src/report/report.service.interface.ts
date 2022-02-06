@@ -9,4 +9,5 @@ export interface IReportService {
 	addOilWell: (dto: ReportAddWellDto) => Promise<OilWellModel | null>;
 	setDataFile: (dataFile: UploadedFile, email: string) => Promise<ReportModel | null>;
 	getReport: (email: string) => Promise<ReportBuild>;
+	clearOilWell: (email: string) => Promise<void>;
 }

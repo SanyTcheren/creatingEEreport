@@ -33,6 +33,11 @@
 									<input type="submit" value="Добавить" class="button-primary" />
 								</div>
 							</form>
+							<form action="/report/clearwell" method="post">
+								<input type="hidden" value="<%=jwt%>" name="jwt">
+								<input type="hidden" value="<%=email%>" name="email">
+								<input type="submit" value="Сбросить" class="button-primary" />
+							</form>
 							<form action="/report/oilwell" method="post">
 								<input type="hidden" value="<%=jwt%>" name="jwt">
 								<input type="hidden" value="<%=email%>" name="email">
@@ -41,20 +46,19 @@
 						</section>
 					</div>
 					<div class="col-sm-12 col-md-6">
-						<p class="alert alert-danger">
-							Будьте внимательны при заполнении данных по скважинам! Если ошибетесь жмите кнопку RESTART
-							внизу страницы. Обращайте внимние на следующее:</p>
 						<blockquote>
-							<p class="alert alert-danger"><em> - правильно выбирайте вид работ<br> - время начало работ
+							<p class="alert alert-danger"><em> - правильно выбирайте вид работ<br> - перед каждой
+									скважиной, кроме первой, должно быть пзр к
+									бурению<br> - время начало работ
 									следующей скважины должно совпадать
 									с
 									временем окончанию работ
-									предыдущей<br> - если работы еще не закончены выберете любую дату из
-									будущего</em></p>
+									предыдущей<br> - если работы ещё не закончены выбирете любое время из будущего</em>
+							</p>
 						</blockquote>
-						<p class="alert alert-danger">
+						<p class="alert alert-info">
 							Вверху страницы отображаются добавленные данные. Как будете готовы переходите к следующей
-							странице.
+							странице. Если запутались нажмите СБРОСИТЬ и начните заново.
 						</p>
 					</div>
 				</div>

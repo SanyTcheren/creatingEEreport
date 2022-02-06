@@ -10,15 +10,19 @@ import { IReportRepository } from './report.repository.interface';
 export class ReportRepository implements IReportRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
+	async clearOilWell(email: string): Promise<void> {
+		await this.prismaService.client.oilWellModel.deleteMany({
+			where: {
+				report: {
+					email,
+				},
+			},
+		});
+	}
+
 	async create({ email, type, number, field, bush }: Report): Promise<ReportModel> {
 		if (await this.find(email)) {
-			await this.prismaService.client.oilWellModel.deleteMany({
-				where: {
-					report: {
-						email,
-					},
-				},
-			});
+			this.clearOilWell(email);
 			return await this.prismaService.client.reportModel.update({
 				data: {
 					email,

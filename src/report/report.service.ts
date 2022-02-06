@@ -15,14 +15,18 @@ import { ReportBuilder } from './util/reportBilder';
 @injectable()
 export class ReportService implements IReportService {
 	constructor(
-		@inject(TYPES.IReportRepository) private userRepository: IReportRepository,
+		@inject(TYPES.IReportRepository) private reportRepository: IReportRepository,
 		@inject(TYPES.IFileService) private fileService: IFileService,
 		@inject(TYPES.ReportBuilder) private reportBuilder: ReportBuilder,
 	) {}
 
+	async clearOilWell(email: string): Promise<void> {
+		await this.reportRepository.clearOilWell(email);
+	}
+
 	async createReport(dto: ReportGeneralDto): Promise<ReportModel> {
 		const newReport = new Report(dto.email, dto.type, dto.number, dto.field, dto.bush);
-		return await this.userRepository.create(newReport);
+		return await this.reportRepository.create(newReport);
 	}
 
 	async addOilWell({
@@ -33,19 +37,19 @@ export class ReportService implements IReportService {
 		email,
 	}: ReportAddWellDto): Promise<OilWellModel | null> {
 		const newOilWell = new OilWell(well, detail, start, end);
-		return await this.userRepository.addWell(newOilWell, email);
+		return await this.reportRepository.addWell(newOilWell, email);
 	}
 
 	async setDataFile(dataFile: UploadedFile, email: string): Promise<ReportModel | null> {
 		const uploadPath = await this.fileService.uploadFile(dataFile, email);
-		return await this.userRepository.setFile(uploadPath, email);
+		return await this.reportRepository.setFile(uploadPath, email);
 	}
 
 	async getReport(emailGet: string): Promise<ReportBuild> {
-		const { email, type, number, field, bush, dataFile } = await this.userRepository.getReport(
+		const { email, type, number, field, bush, dataFile } = await this.reportRepository.getReport(
 			emailGet,
 		);
-		const oilWells = await this.userRepository.getOilWell(email);
+		const oilWells = await this.reportRepository.getOilWell(email);
 		const report = new Report(email, type, number, field, bush);
 		report.setDataFile(dataFile as string);
 		report.addWells(oilWells);

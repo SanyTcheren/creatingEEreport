@@ -9,4 +9,5 @@ export interface IReportRepository {
 	setFile: (dataFile: string, email: string) => Promise<ReportModel | null>;
 	getReport: (email: string) => Promise<ReportModel>;
 	getOilWell: (email: string) => Promise<OilWellModel[]>;
+	clearOilWell: (email: string) => Promise<void>;
 }

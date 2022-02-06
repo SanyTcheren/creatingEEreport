@@ -16,6 +16,7 @@ import { ReportOilWellDto } from './dto/report-oilwell.dto';
 import { ReportInputDto } from './dto/report-input.dto';
 import { ReportSaveDto } from './dto/report-save.dto';
 import moment from 'moment';
+import { ReportClearWellDto } from './dto/report-clearwell.dto';
 
 @injectable()
 export class ReportController extends BaseController implements IReportController {
@@ -37,6 +38,12 @@ export class ReportController extends BaseController implements IReportControlle
 				path: '/oilwell',
 				method: 'post',
 				func: this.oilwell,
+				middlewares: [authMiddleWare],
+			},
+			{
+				path: '/clearwell',
+				method: 'post',
+				func: this.clearwell,
 				middlewares: [authMiddleWare],
 			},
 			{
@@ -80,6 +87,19 @@ export class ReportController extends BaseController implements IReportControlle
 		this.logger.log('[report controller] go to the input page');
 		res.render('pages/report', {
 			message: 'сохраните отчет',
+			jwt: body.jwt,
+			email: body.email,
+		});
+	}
+	async clearwell(
+		{ body }: Request<{}, {}, ReportClearWellDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		await this.reportService.clearOilWell(body.email);
+		this.logger.log('[report controller] clear oilwell[]');
+		res.render('pages/oilwell', {
+			message: 'Данные по скважинам сброшены, начинайте заново',
 			jwt: body.jwt,
 			email: body.email,
 		});
@@ -143,7 +163,14 @@ export class ReportController extends BaseController implements IReportControlle
 			res.download(resultPath);
 			this.logger.log('[report controller] save report');
 		} else {
+			await this.reportService.clearOilWell(body.email);
 			this.logger.error(`[report controller] ${errorMessage}`);
+			this.logger.log('[report controller] go to the oil well page');
+			res.render('pages/oilwell', {
+				message: `Неправильно введены данные по скважинам! ${errorMessage} Корректно введите данные по скважинам`,
+				jwt: body.jwt,
+				email: body.email,
+			});
 		}
 	}
 }
