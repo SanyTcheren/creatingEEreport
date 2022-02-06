@@ -12,3 +12,8 @@ export interface WellPrepareDrill {
 	prepare: OilWell | null;
 	drill: OilWell | null;
 }
+
+export interface ReportBuild {
+	resultPath?: string;
+	errorMessage: string;
+}

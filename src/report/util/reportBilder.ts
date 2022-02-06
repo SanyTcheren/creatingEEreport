@@ -7,7 +7,7 @@ import Excel from 'exceljs';
 import { OilWell } from '../oilwell';
 import moment, { Moment } from 'moment';
 import { getPower } from './readPowerProfile';
-import { WellPrepareDrill } from '../../types/custom';
+import { ReportBuild, WellPrepareDrill } from '../../types/custom';
 
 @injectable()
 export class ReportBuilder {
@@ -56,7 +56,7 @@ export class ReportBuilder {
 		this.templatePath = fileService.getTemplate();
 	}
 
-	async build(report: Report): Promise<string> {
+	async build(report: Report): Promise<ReportBuild> {
 		this.report = report;
 		const resultPath = await this.fileService.getReport(report.email);
 		const powerPath = report.dataFile;
@@ -83,7 +83,7 @@ export class ReportBuilder {
 		} catch (error) {
 			this.logger.error('[report builder] `Не удалось создать отчет.');
 		}
-		return resultPath;
+		return { resultPath, errorMessage: 'Ok' };
 	}
 
 	async getWellPrepareDrill(): Promise<WellPrepareDrill[]> {

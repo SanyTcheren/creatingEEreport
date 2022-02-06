@@ -138,8 +138,12 @@ export class ReportController extends BaseController implements IReportControlle
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		const reportFile = await this.reportService.getReport(body.email);
-		res.download(reportFile);
-		this.logger.log('[report controller] save report');
+		const { resultPath, errorMessage } = await this.reportService.getReport(body.email);
+		if (resultPath) {
+			res.download(resultPath);
+			this.logger.log('[report controller] save report');
+		} else {
+			this.logger.error(`[report controller] ${errorMessage}`);
+		}
 	}
 }

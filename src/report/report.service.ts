@@ -3,6 +3,7 @@ import { UploadedFile } from 'express-fileupload';
 import { inject, injectable } from 'inversify';
 import { IFileService } from '../common/file.service.interface';
 import { TYPES } from '../types';
+import { ReportBuild } from '../types/custom';
 import { ReportAddWellDto } from './dto/report-addwell.dto';
 import { ReportGeneralDto } from './dto/report-general.dto';
 import { OilWell } from './oilwell';
@@ -40,7 +41,7 @@ export class ReportService implements IReportService {
 		return await this.userRepository.setFile(uploadPath, email);
 	}
 
-	async getReport(emailGet: string): Promise<string> {
+	async getReport(emailGet: string): Promise<ReportBuild> {
 		const { email, type, number, field, bush, dataFile } = await this.userRepository.getReport(
 			emailGet,
 		);
