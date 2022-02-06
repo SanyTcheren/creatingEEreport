@@ -1,6 +1,7 @@
 import { stat, readFile } from 'fs/promises';
 import inconv from 'iconv-lite';
-import { PowerYearMonth } from '../../types/custom';
+import moment from 'moment';
+import { CheckDataFile, PowerYearMonth } from '../../types/custom';
 
 const kPower = 7200; //Коэффициент трансформации
 
@@ -42,6 +43,53 @@ const getPower = async (file: string): Promise<PowerYearMonth> => {
 	await isExist(file);
 	const power = await readPower(file);
 	return power;
+};
+
+export const checkDataFile = async (file: string): Promise<CheckDataFile> => {
+	const dataBuffer = await readFile(file);
+	const data = inconv.decode(dataBuffer, 'win1251');
+	const dataArr = data.split('\n');
+	//берем пятую строку файла, которая является первой строкой данных.
+	const dataLine = dataArr[6].split('\t');
+	const day = dataLine[0].split('.')[0];
+	if (day != '01') {
+		return { error: `Профиль мощности должен начинаться с первого числа месяца, а не с ${day}` };
+	}
+	const monthIndex = Number(dataLine[0].split('.')[1]) - 1;
+	const monthString = [
+		'январь',
+		'февраль',
+		'март',
+		'апрель',
+		'май',
+		'июнь',
+		'июль',
+		'апрель',
+		'сентябрь',
+		'октябрь',
+		'ноябрь',
+		'январь',
+	];
+	let month = monthString[monthIndex];
+	const lastDay = dataArr[dataArr.length - 2].split('.')[0];
+	const days = moment().month(monthIndex).daysInMonth();
+	if (Number.parseInt(lastDay, 10) < days) {
+		month += `(только до ${lastDay} числа)`;
+	}
+
+	const time = dataLine[1].split('-');
+	if (time[1].split(':')[1] != '00') {
+		return {
+			error:
+				'В файле нет часового профиля мощности, возможно вы сохранили получасовой профиль мощности',
+		};
+	}
+	let power = 0;
+	for (let i = 5; i < dataArr.length - 1; i++) {
+		power += Number(dataArr[i].split('\t')[2].replace(',', '.')) * kPower;
+	}
+	power = Math.round(power);
+	return { power, month };
 };
 
 export { getPower };

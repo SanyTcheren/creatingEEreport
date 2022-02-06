@@ -5,6 +5,8 @@ import { IFileService } from './file.service.interface';
 import path from 'path';
 import { mkdir, stat } from 'fs/promises';
 import { UploadedFile } from 'express-fileupload';
+import { CheckDataFile } from '../types/custom';
+import { checkDataFile } from '../report/util/readPowerProfile';
 
 @injectable()
 export class FileService implements IFileService {
@@ -13,6 +15,15 @@ export class FileService implements IFileService {
 	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
 		this._root = path.join(__dirname, `../../public/files/`);
 	}
+
+	async checkFile(pathFile: string): Promise<CheckDataFile> {
+		try {
+			return await checkDataFile(pathFile);
+		} catch (error) {
+			return { error: 'файл содержит неверные данные!' };
+		}
+	}
+
 	async getReport(email: string): Promise<string> {
 		const reportPath = path.join(await this.getOutDir(email), 'report.xlsx');
 		return reportPath;

@@ -17,3 +17,9 @@ export interface ReportBuild {
 	resultPath?: string;
 	errorMessage: string;
 }
+
+export interface CheckDataFile {
+	error?: string;
+	month?: string;
+	power?: number;
+}

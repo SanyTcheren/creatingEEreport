@@ -15,7 +15,7 @@ import { IReportService } from './report.service.interface';
 import { ReportOilWellDto } from './dto/report-oilwell.dto';
 import { ReportInputDto } from './dto/report-input.dto';
 import { ReportSaveDto } from './dto/report-save.dto';
-import moment from 'moment';
+import moment, { months } from 'moment';
 import { ReportClearWellDto } from './dto/report-clearwell.dto';
 
 @injectable()
@@ -160,13 +160,25 @@ export class ReportController extends BaseController implements IReportControlle
 			});
 		} else {
 			const dataFile = req.files.dataFile as UploadedFile;
-			await this.reportService.setDataFile(dataFile, req.body.email);
-			this.logger.log('[report controller] go to the oil well page');
-			res.render('pages/oilwell', {
-				message: 'введите данные по скважинам',
-				jwt: req.body.jwt,
-				email: req.body.email,
-			});
+			const { month, power, error } = await this.reportService.setDataFile(
+				dataFile,
+				req.body.email,
+			);
+			if (error) {
+				this.logger.warn('[report controller] don`t checked data-file');
+				res.render('pages/input', {
+					message: `Загружен файл с неверными данными: ${error}`,
+					jwt: req.body.jwt,
+					email: req.body.email,
+				});
+			} else {
+				this.logger.log('[report controller] go to the oil well page');
+				res.render('pages/oilwell', {
+					message: `Распределите ${power} кВТ*ч между скважинами , в  месяце ${month}`,
+					jwt: req.body.jwt,
+					email: req.body.email,
+				});
+			}
 		}
 	}
 
