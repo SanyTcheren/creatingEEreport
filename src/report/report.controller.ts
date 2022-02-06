@@ -83,13 +83,30 @@ export class ReportController extends BaseController implements IReportControlle
 			});
 		}
 	}
-	oilwell({ body }: Request<{}, {}, ReportOilWellDto>, res: Response, next: NextFunction): void {
-		this.logger.log('[report controller] go to the input page');
-		res.render('pages/report', {
-			message: 'сохраните отчет',
-			jwt: body.jwt,
-			email: body.email,
-		});
+	async oilwell(
+		{ body }: Request<{}, {}, ReportOilWellDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const { resultPath, errorMessage } = await this.reportService.getReport(body.email);
+		if (resultPath) {
+			this.logger.log('[report controller] go to the input page');
+			res.render('pages/report', {
+				message: 'сохраните отчет',
+				jwt: body.jwt,
+				email: body.email,
+				resultPath,
+			});
+		} else {
+			await this.reportService.clearOilWell(body.email);
+			this.logger.error(`[report controller] ${errorMessage}`);
+			this.logger.log('[report controller] go to the oil well page');
+			res.render('pages/oilwell', {
+				message: `Неправильно введены данные по скважинам! ${errorMessage} Корректно введите данные по скважинам`,
+				jwt: body.jwt,
+				email: body.email,
+			});
+		}
 	}
 	async clearwell(
 		{ body }: Request<{}, {}, ReportClearWellDto>,
@@ -158,19 +175,7 @@ export class ReportController extends BaseController implements IReportControlle
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		const { resultPath, errorMessage } = await this.reportService.getReport(body.email);
-		if (resultPath) {
-			res.download(resultPath);
-			this.logger.log('[report controller] save report');
-		} else {
-			await this.reportService.clearOilWell(body.email);
-			this.logger.error(`[report controller] ${errorMessage}`);
-			this.logger.log('[report controller] go to the oil well page');
-			res.render('pages/oilwell', {
-				message: `Неправильно введены данные по скважинам! ${errorMessage} Корректно введите данные по скважинам`,
-				jwt: body.jwt,
-				email: body.email,
-			});
-		}
+		res.download(body.resultPath);
+		this.logger.log('[report controller] save report');
 	}
 }

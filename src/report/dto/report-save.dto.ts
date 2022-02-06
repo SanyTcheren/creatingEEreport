@@ -8,4 +8,6 @@ export class ReportSaveDto implements ValidateDto {
 	jwt?: string;
 
 	unvalidate?: string;
+
+	resultPath: string;
 }
