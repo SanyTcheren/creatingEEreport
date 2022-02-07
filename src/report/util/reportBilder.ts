@@ -61,6 +61,12 @@ export class ReportBuilder {
 		this.report = report;
 		const resultPath = await this.fileService.getReport(report.email);
 		const powerPath = report.dataFile;
+		//получаем данные для отчета
+		const wells = await this.getWellPrepareDrill();
+		const { power, year, month } = await getPower(powerPath);
+		this.year = year;
+		this.month = month;
+		this.days = 32 - new Date(year, month - 1, 32).getDate();
 
 		try {
 			//Создаем лист отчета
@@ -68,17 +74,10 @@ export class ReportBuilder {
 			await workbook.xlsx.readFile(this.templatePath);
 			const sheet = workbook.getWorksheet(1);
 			//проверяем правильность данных по скважинам
-			const errorMessage: string | void = this.checkWell();
+			const errorMessage: string | void = await this.checkWell();
 			if (errorMessage) {
 				return { errorMessage };
 			}
-			//получаем данные для отчета
-			const wells = await this.getWellPrepareDrill();
-			const { power, year, month } = await getPower(powerPath);
-			this.year = year;
-			this.month = month;
-			this.days = 32 - new Date(year, month - 1, 32).getDate();
-
 			//записываем данные в отчет
 			await this.setSheet(sheet, wells, power);
 
@@ -91,7 +90,7 @@ export class ReportBuilder {
 		return { resultPath, errorMessage: 'Ok' };
 	}
 
-	checkWell(): string | void {
+	async checkWell(): Promise<string | void> {
 		const month = Number(this.month - 1);
 		const year = Number(this.year);
 		const firstDay = moment({
@@ -127,12 +126,12 @@ export class ReportBuilder {
 		if (firstDay.isBefore(moment(sortedWells[0].start))) {
 			return `Отсутсвуют данные о бурении в начале месяца (до ${moment(
 				sortedWells[0].start,
-			).day()} числа месяца ${this.MONTH[month]})!`;
+			).date()} числа месяца ${this.MONTH[month]})!`;
 		}
 		if (lastDay.isAfter(moment(sortedWells[sortedWells.length - 1].end))) {
 			return `Отсутсвуют данные о бурении в конце месяца (c ${moment(
 				sortedWells[sortedWells.length - 1].end,
-			).day()} числа месяца ${this.MONTH[month]})!`;
+			).date()} числа месяца ${this.MONTH[month]})!`;
 		}
 		for (let i = 0; i < wells.length; i++) {
 			if (i != 0 && wells[i].detail == 'drill') {
