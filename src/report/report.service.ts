@@ -42,8 +42,8 @@ export class ReportService implements IReportService {
 
 	async setDataFile(dataFile: UploadedFile, email: string): Promise<CheckDataFile> {
 		const uploadPath = await this.fileService.uploadFile(dataFile, email);
-		const { month, power, error } = await this.fileService.checkFile(uploadPath);
 		await this.reportRepository.setFile(uploadPath, email);
+		const { month, power, error } = await this.fileService.checkFile(uploadPath);
 		return { month, power, error };
 	}
 
