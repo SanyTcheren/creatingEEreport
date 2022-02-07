@@ -36,7 +36,7 @@ const readPower = async (file: string): Promise<PowerYearMonth> => {
 	}
 	const date: string[] = dataArr[dataArr.length - 2].split('\t')[0].split('.');
 	const year =
-		date[2].length == 2 ? 2000 + Number.parseInt(date[2], 10) : Number.parseInt(date[1], 10);
+		date[2].length == 2 ? 2000 + Number.parseInt(date[2], 10) : Number.parseInt(date[2], 10);
 	const month = Number.parseInt(date[1], 10);
 	return { power, year, month };
 };
