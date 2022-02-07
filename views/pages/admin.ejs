@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<%- include ('../partials/head') %>
+</head>
+
+<body>
+
+	<main>
+
+		<div class="container">
+			<%- include ('../partials/message') %>
+				<div class="row">
+					<div class="col-sm-12 col-md-8 col-lg-6">
+						<section id="content">
+							<form action="/user/download" method="post" onsubmit="">
+								<input type="hidden" value="<%=jwt%>" name="jwt">
+								<input type="hidden" value="<%=email%>" name="email">
+								<h4>Скачать</h4>
+								<input type="text" value="../../prisma/dev.db" name="path">
+								<div>
+									<input type="submit" value="скачать" class="button-primary" />
+								</div>
+							</form>
+							<form action="/user/upload" method="post" encType="multipart/form-data">
+								<h4>Загрузить</h4>
+								<div class=" form-control">
+									<input type="text" value="../../prisma/" name="path">
+									<input type="file" name="dataFile" required>
+								</div>
+								<div>
+									<input type="submit" value="Загрузить" class="button-primary" />
+								</div>
+							</form>
+							<form action="/user/remove" method="post" encType="multipart/form-data">
+								<h4>Удалить</h4>
+								<div class=" form-control">
+									<input type="text" value="/test" name="pathDir">
+								</div>
+								<div>
+									<input type="submit" value="удалить" class="button-primary" />
+								</div>
+							</form>
+
+						</section>
+					</div>
+				</div>
+
+		</div>
+
+	</main>
+
+	<footer>
+		<%- include ('../partials/footer') %>
+	</footer>
+
+</body>
+
+</html>

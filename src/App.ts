@@ -28,7 +28,7 @@ export class App {
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
 	) {
 		this.app = express();
-		this.port = configService.get('PORT');
+		this.port = process.env.PORT || '8000';
 	}
 
 	useMiddleware(): void {

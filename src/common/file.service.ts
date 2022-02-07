@@ -3,7 +3,7 @@ import { ILogger } from '../logger/logger.interface';
 import { TYPES } from '../types';
 import { IFileService } from './file.service.interface';
 import path from 'path';
-import { mkdir, stat } from 'fs/promises';
+import { mkdir, stat, rm } from 'fs/promises';
 import { UploadedFile } from 'express-fileupload';
 import { CheckDataFile } from '../types/custom';
 import { checkDataFile } from '../report/util/readPowerProfile';
@@ -14,6 +14,15 @@ export class FileService implements IFileService {
 
 	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
 		this._root = path.join(__dirname, `../../public/files/`);
+	}
+	async removeDirFiles(pathDir: string): Promise<void> {
+		const absPathDir = path.join(this._root, pathDir);
+		try {
+			await stat(absPathDir);
+			await rm(absPathDir, { recursive: true });
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	async checkFile(pathFile: string): Promise<CheckDataFile> {
@@ -29,8 +38,23 @@ export class FileService implements IFileService {
 		return reportPath;
 	}
 
+	async getPathFile(file: string): Promise<string> {
+		const reportPath = path.join(this._root, file);
+		return reportPath;
+	}
+
 	async uploadFile(file: UploadedFile, email: string): Promise<string> {
 		const filePath = path.join(await this.getOutDir(email), file.name);
+		file.mv(filePath, (err) => {
+			if (err) {
+				this.logger.error('[file service] неудалось загрузить файл');
+			}
+		});
+		return filePath;
+	}
+
+	async uploadAdminFile(file: UploadedFile, pathDir: string): Promise<string> {
+		const filePath = path.join(this._root, pathDir, file.name);
 		file.mv(filePath, (err) => {
 			if (err) {
 				this.logger.error('[file service] неудалось загрузить файл');
