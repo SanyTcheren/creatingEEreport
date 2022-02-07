@@ -68,7 +68,7 @@ export const checkDataFile = async (file: string): Promise<CheckDataFile> => {
 		'сентябрь',
 		'октябрь',
 		'ноябрь',
-		'январь',
+		'декабрь',
 	];
 	let month = monthString[monthIndex];
 	const lastDay = dataArr[dataArr.length - 2].split('.')[0];
