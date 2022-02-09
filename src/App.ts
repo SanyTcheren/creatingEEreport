@@ -37,7 +37,7 @@ export class App {
 	}
 
 	useStartPage(): void {
-		this.app.use('/start', (req: Request, res: Response) => {
+		this.app.use(/^\/$/, (req: Request, res: Response) => {
 			this.logger.log(`[application] load first page`);
 			res.render('pages/start');
 		});
@@ -61,7 +61,7 @@ export class App {
 		this.useExceptionFilter();
 		await this.prismaService.connect();
 		this.server = this.app.listen(Number(this.port));
-		this.logger.log(`[application] Сервер запущен на http://localhost:${this.port}/start`);
+		this.logger.log(`[application] Сервер запущен на http://localhost:${this.port}`);
 	}
 
 	public async close(): Promise<void> {
